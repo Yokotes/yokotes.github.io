@@ -40,8 +40,6 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
     [renderer, camera]
   )
   controls.enableDamping = true
-  // controls.maxDistance = 3.5
-  // controls.minDistance = 3.5
   controls.enableZoom = false
 
   const useRenderLoop = (handler: Handler, name: string, deps: any[] = []) => {
@@ -69,7 +67,7 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
     container?.append(renderer.domElement)
 
     camera.position.x = 2.5
-    camera.position.y = 2.5
+    camera.position.y = 3.2
     camera.position.z = 2.5
     scene.add(camera)
 

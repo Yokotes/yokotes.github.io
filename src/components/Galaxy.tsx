@@ -12,6 +12,11 @@ import {
 } from 'three'
 
 import { useCoreContext } from '../contexts'
+import {
+  getRandomProjectStarPosition,
+  getRandomStartPosition,
+} from '../helpers'
+import { ProjectStar } from './ProjectStar'
 
 interface Props {
   count: number
@@ -23,9 +28,9 @@ const parameters = {
   branches: 8,
   spin: 0.6,
   randomness: 0.3,
-  randomnessPower: 3,
+  randomnessPower: 3.5,
   insideColor: '#ff6030',
-  outsideColor: '#1b3984',
+  outsideColor: '#8269fa',
 }
 
 const useStyles = makeStyles({
@@ -53,15 +58,11 @@ function generateGalaxy(count: number) {
       ((i % parameters.branches) / parameters.branches) * 2 * Math.PI
     const spinAngle = x * parameters.spin
 
-    const randomX =
-      Math.pow(Math.random(), parameters.randomnessPower) *
-      (Math.random() < 0.5 ? 1 : -1)
-    const randomY =
-      Math.pow(Math.random(), parameters.randomnessPower) *
-      (Math.random() < 0.5 ? 1 : -1)
-    const randomZ =
-      Math.pow(Math.random(), parameters.randomnessPower) *
-      (Math.random() < 0.5 ? 1 : -1)
+    const {
+      x: randomX,
+      y: randomY,
+      z: randomZ,
+    } = getRandomStartPosition(parameters.randomnessPower)
 
     positions[i * 3] = Math.sin(branchAngle + spinAngle) * x + randomX
     positions[i * 3 + 1] = randomY
@@ -116,11 +117,60 @@ export const Galaxy = ({ count }: Props) => {
 
   useRenderLoop(
     () => {
-      points.rotation.y = clock.getElapsedTime() * 0.3
+      points.rotation.y = clock.getElapsedTime() * 0.1
     },
     'galaxy',
     [points, clock]
   )
 
-  return <div id="scene-container" className={classes.container}></div>
+  return (
+    <>
+      <div id="scene-container" className={classes.container}></div>
+      <ProjectStar
+        galaxy={points}
+        position={getRandomProjectStarPosition(
+          2,
+          parameters.spin,
+          parameters.branches,
+          parameters.radius - 2
+        )}
+      />
+      <ProjectStar
+        galaxy={points}
+        position={getRandomProjectStarPosition(
+          2,
+          parameters.spin,
+          parameters.branches,
+          parameters.radius - 2
+        )}
+      />
+      <ProjectStar
+        galaxy={points}
+        position={getRandomProjectStarPosition(
+          2,
+          parameters.spin,
+          parameters.branches,
+          parameters.radius - 2
+        )}
+      />
+      <ProjectStar
+        galaxy={points}
+        position={getRandomProjectStarPosition(
+          2,
+          parameters.spin,
+          parameters.branches,
+          parameters.radius - 2
+        )}
+      />
+      <ProjectStar
+        galaxy={points}
+        position={getRandomProjectStarPosition(
+          2,
+          parameters.spin,
+          parameters.branches,
+          parameters.radius - 2
+        )}
+      />
+    </>
+  )
 }

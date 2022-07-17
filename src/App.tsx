@@ -4,7 +4,7 @@ import { Galaxy } from './components'
 function App() {
   return (
     <div className="App">
-      <Galaxy count={70000} />{' '}
+      <Galaxy count={70000} />
     </div>
   )
 }
