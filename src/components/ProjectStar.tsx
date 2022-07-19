@@ -30,6 +30,9 @@ export const ProjectStar = ({ position, galaxy }: Props) => {
     () =>
       new MeshBasicMaterial({
         color: new Color('black'),
+        depthWrite: false,
+        transparent: true,
+        opacity: 1,
       }),
     []
   )
@@ -51,6 +54,8 @@ export const ProjectStar = ({ position, galaxy }: Props) => {
   useEffect(() => {
     galaxy.remove(bgCircle)
     galaxy.add(bgCircle)
+
+    bgCircle.renderOrder = 70000
 
     bgCircle.remove(borderCircle)
     bgCircle.add(borderCircle)
