@@ -1,13 +1,14 @@
 import { useEffect, useMemo } from 'react'
 import {
   CircleBufferGeometry,
-  Clock,
   Color,
   Mesh,
   MeshBasicMaterial,
   Points,
   RingBufferGeometry,
+  TextureLoader,
 } from 'three'
+import { v4 } from 'uuid'
 import { useCoreContext } from '../contexts'
 
 interface Props {
@@ -51,18 +52,43 @@ export const ProjectStar = ({ position, galaxy }: Props) => {
     [borderGeometry, borderMaterial]
   )
 
+  const starTexture = useMemo(
+    () => new TextureLoader().load('/images/star.png'),
+    []
+  )
+  const starMaterial = useMemo(
+    () =>
+      new MeshBasicMaterial({
+        alphaMap: starTexture,
+        depthWrite: false,
+        transparent: true,
+        opacity: 1,
+      }),
+    [starTexture]
+  )
+  const starGeomentry = useMemo(() => new CircleBufferGeometry(0.03), [])
+  const star = useMemo(
+    () => new Mesh(starGeomentry, starMaterial),
+    [starGeomentry, starMaterial]
+  )
+
   useEffect(() => {
     galaxy.remove(bgCircle)
     galaxy.add(bgCircle)
 
-    bgCircle.renderOrder = 70000
+    bgCircle.renderOrder = 70001
+    star.renderOrder = 70002
 
     bgCircle.remove(borderCircle)
     bgCircle.add(borderCircle)
+    bgCircle.remove(star)
+    bgCircle.add(star)
+
+    bgCircle.name = `project_star_${v4()}`
 
     const { x, y, z } = position
     bgCircle.position.set(x, y, z)
-  }, [bgCircle, position, galaxy, borderCircle])
+  }, [bgCircle, position, galaxy, borderCircle, star])
 
   useRenderLoop(
     () => {

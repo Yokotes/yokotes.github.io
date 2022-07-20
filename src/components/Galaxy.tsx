@@ -13,6 +13,7 @@ import {
 
 import { useCoreContext } from '../contexts'
 import {
+  getPointerModelName,
   getRandomProjectStarPosition,
   getRandomStartPosition,
 } from '../helpers'
@@ -43,7 +44,7 @@ const useStyles = makeStyles({
 function generateGalaxy(count: number) {
   const geometry = new BufferGeometry()
   const textureLoader = new TextureLoader()
-  const shape = textureLoader.load('/shape.png')
+  const shape = textureLoader.load('/images/shape.png')
 
   const positions = new Float32Array(count * 3)
   const colors = new Float32Array(count * 3)
@@ -99,13 +100,28 @@ function generateGalaxy(count: number) {
 
 export const Galaxy = ({ count }: Props) => {
   const classes = useStyles()
-  const { scene, useRenderLoop } = useCoreContext()
+  const { scene, useRenderLoop, camera } = useCoreContext()
   const [points, setPoints] = useState<Points>(new Points())
   const clock = useMemo(() => new Clock(), [])
 
   useEffect(() => {
     setPoints(generateGalaxy(count))
   }, [count])
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      const star = getPointerModelName(e, scene, camera, 'project_star')
+
+      // if (!star) return
+
+      // star.scale.multiplyScalar(0.1)
+    }
+    window.addEventListener('mousemove', handler)
+
+    return () => {
+      window.removeEventListener('mousemove', handler)
+    }
+  }, [camera, scene])
 
   useEffect(() => {
     scene.add(points)
@@ -117,7 +133,7 @@ export const Galaxy = ({ count }: Props) => {
 
   useRenderLoop(
     () => {
-      points.rotation.y = clock.getElapsedTime() * 0.1
+      points.rotation.y = clock.getElapsedTime() * 0.05
     },
     'galaxy',
     [points, clock]
