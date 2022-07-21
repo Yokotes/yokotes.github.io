@@ -1,8 +1,8 @@
-import { Camera, Raycaster, Scene, Vector2 } from 'three'
+import { Camera, Object3D, Raycaster, Vector2 } from 'three'
 
 export const getPointerModelName = (
   e: MouseEvent,
-  scene: Scene,
+  objects: Object3D[],
   camera: Camera,
   filterString?: string
 ) => {
@@ -16,7 +16,7 @@ export const getPointerModelName = (
 
   raycaster.setFromCamera(vector, camera)
   const intersect = raycaster
-    .intersectObjects(scene.children)
+    .intersectObjects(objects)
     .filter((item) => !filterString || item.object.name.includes(filterString))
     .sort((objA, objB) => objA.distance - objB.distance)[0]
 

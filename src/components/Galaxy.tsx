@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/core'
 import React, { useEffect, useMemo, useState } from 'react'
+import { useSelector } from 'react-redux'
 import {
   BufferGeometry,
   Color,
@@ -17,6 +18,7 @@ import {
   getRandomProjectStarPosition,
   getRandomStartPosition,
 } from '../helpers'
+import { projectStarDataItemsSelector } from '../selectors'
 import { ProjectStar } from './ProjectStar'
 
 interface Props {
@@ -103,6 +105,7 @@ export const Galaxy = ({ count }: Props) => {
   const { scene, useRenderLoop, camera } = useCoreContext()
   const [points, setPoints] = useState<Points>(new Points())
   const clock = useMemo(() => new Clock(), [])
+  const projectStars = useSelector(projectStarDataItemsSelector)
 
   useEffect(() => {
     setPoints(generateGalaxy(count))
@@ -110,10 +113,8 @@ export const Galaxy = ({ count }: Props) => {
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      const star = getPointerModelName(e, scene, camera, 'project_star')
-
+      // const star = getPointerModelName(e, scene, camera, 'project_star')
       // if (!star) return
-
       // star.scale.multiplyScalar(0.1)
     }
     window.addEventListener('mousemove', handler)
@@ -142,51 +143,18 @@ export const Galaxy = ({ count }: Props) => {
   return (
     <>
       <div id="scene-container" className={classes.container}></div>
-      <ProjectStar
-        galaxy={points}
-        position={getRandomProjectStarPosition(
-          2,
-          parameters.spin,
-          parameters.branches,
-          parameters.radius - 2
-        )}
-      />
-      <ProjectStar
-        galaxy={points}
-        position={getRandomProjectStarPosition(
-          2,
-          parameters.spin,
-          parameters.branches,
-          parameters.radius - 2
-        )}
-      />
-      <ProjectStar
-        galaxy={points}
-        position={getRandomProjectStarPosition(
-          2,
-          parameters.spin,
-          parameters.branches,
-          parameters.radius - 2
-        )}
-      />
-      <ProjectStar
-        galaxy={points}
-        position={getRandomProjectStarPosition(
-          2,
-          parameters.spin,
-          parameters.branches,
-          parameters.radius - 2
-        )}
-      />
-      <ProjectStar
-        galaxy={points}
-        position={getRandomProjectStarPosition(
-          2,
-          parameters.spin,
-          parameters.branches,
-          parameters.radius - 2
-        )}
-      />
+      {projectStars.map((star) => (
+        <ProjectStar
+          key={star.id}
+          galaxy={points}
+          position={getRandomProjectStarPosition(
+            2,
+            parameters.spin,
+            parameters.branches,
+            parameters.radius - 2
+          )}
+        />
+      ))}
     </>
   )
 }
