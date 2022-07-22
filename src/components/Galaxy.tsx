@@ -143,18 +143,21 @@ export const Galaxy = ({ count }: Props) => {
   return (
     <>
       <div id="scene-container" className={classes.container}></div>
-      {projectStars.map((star) => (
-        <ProjectStar
-          key={star.id}
-          galaxy={points}
-          position={getRandomProjectStarPosition(
-            2,
-            parameters.spin,
-            parameters.branches,
-            parameters.radius - 2
-          )}
-        />
-      ))}
+      {projectStars
+        .toList()
+        .toArray()
+        .map((star) => (
+          <ProjectStar
+            key={star.id}
+            galaxy={points}
+            position={getRandomProjectStarPosition(
+              2,
+              parameters.spin,
+              parameters.branches,
+              parameters.radius - 2
+            )}
+          />
+        ))}
     </>
   )
 }

@@ -4,4 +4,4 @@ import * as reducers from './reducers'
 
 const rootReducer = combineReducers(reducers)
 
-export const store = configureStore({ reducer: rootReducer })
+export const store = configureStore({ reducer: rootReducer, devTools: true })

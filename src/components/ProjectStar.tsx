@@ -4,11 +4,13 @@ import {
   Color,
   Mesh,
   MeshBasicMaterial,
+  Object3D,
   Points,
   RingBufferGeometry,
   TextureLoader,
 } from 'three'
 import { v4 } from 'uuid'
+import { PROJECT_STAR_MODEL } from '../constants'
 import { useCoreContext } from '../contexts'
 
 interface Props {
@@ -22,21 +24,22 @@ interface Props {
 
 export const ProjectStar = ({ position, galaxy }: Props) => {
   const { camera, useRenderLoop } = useCoreContext()
+  const model = useMemo(() => PROJECT_STAR_MODEL.clone(true), [])
 
   useEffect(() => {
-    galaxy.remove(bgCircle)
-    galaxy.add(bgCircle)
+    galaxy.remove(model)
+    galaxy.add(model)
 
     const { x, y, z } = position
-    bgCircle.position.set(x, y, z)
-  }, [bgCircle, position, galaxy, borderCircle, star])
+    model.position.set(x, y, z)
+  }, [model, position, galaxy])
 
   useRenderLoop(
     () => {
-      bgCircle.lookAt(camera.position)
+      model.lookAt(camera.position)
     },
-    `${bgCircle.id}_update`,
-    [bgCircle, camera]
+    `${model.id}_update`,
+    [model, camera]
   )
 
   return null

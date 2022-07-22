@@ -15,6 +15,9 @@ export class ProjectStarRecord extends Record(defaultValue) {
   }
 
   public static create(params: ProjectStarParams) {
-    return new ProjectStarRecord({ ...params, id: params.id || v4() })
+    return new ProjectStarRecord({
+      ...params,
+      id: params.id || v4(),
+    })
   }
 }
