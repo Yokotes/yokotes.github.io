@@ -1,3 +1,4 @@
+import { PARAMETERS } from './parameters'
 import {
   CircleBufferGeometry,
   RingBufferGeometry,
@@ -6,7 +7,8 @@ import {
   Mesh,
   TextureLoader,
 } from 'three'
-import { v4 } from 'uuid'
+
+const { COUNT } = PARAMETERS
 
 const bgGeometry = new CircleBufferGeometry(0.1, 32)
 const borderGeometry = new RingBufferGeometry(0.1, 0.11, 32)
@@ -18,6 +20,7 @@ const bgMaterial = new MeshBasicMaterial({
   opacity: 1,
 })
 const borderMaterial = bgMaterial.clone()
+borderMaterial.color = new Color('#fff')
 
 const PROJECT_STAR_MODEL = new Mesh(bgGeometry, bgMaterial)
 const borderCircle = new Mesh(borderGeometry, borderMaterial)
@@ -32,15 +35,11 @@ const starMaterial = new MeshBasicMaterial({
 const starGeomentry = new CircleBufferGeometry(0.03)
 const star = new Mesh(starGeomentry, starMaterial)
 
-PROJECT_STAR_MODEL.renderOrder = 70001
-borderCircle.renderOrder = 70002
-star.renderOrder = 70002
+PROJECT_STAR_MODEL.renderOrder = COUNT + 1
+star.renderOrder = COUNT + 2
+star.name = 'star'
 
-PROJECT_STAR_MODEL.remove(borderCircle)
 PROJECT_STAR_MODEL.add(borderCircle)
-PROJECT_STAR_MODEL.remove(star)
 PROJECT_STAR_MODEL.add(star)
-
-PROJECT_STAR_MODEL.name = `project_star_${v4()}`
 
 export { PROJECT_STAR_MODEL }

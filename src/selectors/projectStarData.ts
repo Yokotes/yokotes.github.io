@@ -5,3 +5,8 @@ export const projectStarDataItemsSelector = createSelector(
   (state: AppState) => state.projectStarData,
   (projectStarData) => projectStarData.items
 )
+
+export const projectStarDataCurrentItemSelector = createSelector(
+  (state: AppState) => state.projectStarData,
+  (projectStarData) => projectStarData.currentStar
+)

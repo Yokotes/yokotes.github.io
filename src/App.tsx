@@ -1,20 +1,21 @@
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { projectStarDataAddItemAction } from './actions'
-import { Galaxy } from './components'
+import { Galaxy, Overlay } from './components'
 
 function App() {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(projectStarDataAddItemAction({}))
-    dispatch(projectStarDataAddItemAction({}))
-    dispatch(projectStarDataAddItemAction({}))
+    dispatch(projectStarDataAddItemAction({ name: 'First' }))
+    dispatch(projectStarDataAddItemAction({ name: 'Second' }))
+    dispatch(projectStarDataAddItemAction({ name: 'Third' }))
   }, [dispatch])
 
   return (
     <div className="App">
-      <Galaxy count={70000} />
+      <Galaxy />
+      <Overlay />
     </div>
   )
 }

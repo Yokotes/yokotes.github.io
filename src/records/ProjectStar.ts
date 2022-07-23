@@ -3,6 +3,8 @@ import { Record } from 'immutable'
 
 const defaultValue = {
   id: '',
+  name: '',
+  isRendered: false,
 }
 
 export type ProjectStarParams = Partial<
@@ -19,5 +21,9 @@ export class ProjectStarRecord extends Record(defaultValue) {
       ...params,
       id: params.id || v4(),
     })
+  }
+
+  public setIsRendered(rendered: boolean) {
+    return this.set('isRendered', rendered)
   }
 }

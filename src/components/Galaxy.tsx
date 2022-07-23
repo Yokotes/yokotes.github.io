@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import {
   BufferGeometry,
@@ -10,31 +10,25 @@ import {
   Points,
   TextureLoader,
   Clock,
+  Mesh,
 } from 'three'
+import { PARAMETERS } from '../constants'
 
 import { useCoreContext } from '../contexts'
-import {
-  getPointerModelName,
-  getRandomProjectStarPosition,
-  getRandomStartPosition,
-} from '../helpers'
+import { getRandomStartPosition } from '../helpers'
 import { projectStarDataItemsSelector } from '../selectors'
 import { ProjectStar } from './ProjectStar'
 
-interface Props {
-  count: number
-}
-
-const parameters = {
-  size: 0.015,
-  radius: 5,
-  branches: 8,
-  spin: 0.6,
-  randomness: 0.3,
-  randomnessPower: 3.5,
-  insideColor: '#ff6030',
-  outsideColor: '#8269fa',
-}
+const {
+  BRANCHES,
+  COUNT,
+  INSIDE_COLOR,
+  OUTSIDE_COLOR,
+  RADIUS,
+  RANDOMNESS_POWER,
+  SIZE,
+  SPIN,
+} = PARAMETERS
 
 const useStyles = makeStyles({
   container: {
@@ -43,29 +37,28 @@ const useStyles = makeStyles({
   },
 })
 
-function generateGalaxy(count: number) {
+function generateGalaxy() {
   const geometry = new BufferGeometry()
   const textureLoader = new TextureLoader()
   const shape = textureLoader.load('/images/shape.png')
 
-  const positions = new Float32Array(count * 3)
-  const colors = new Float32Array(count * 3)
+  const positions = new Float32Array(COUNT * 3)
+  const colors = new Float32Array(COUNT * 3)
 
-  const colorInside = new Color(parameters.insideColor)
-  const colorOutside = new Color(parameters.outsideColor)
+  const colorInside = new Color(INSIDE_COLOR)
+  const colorOutside = new Color(OUTSIDE_COLOR)
 
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < COUNT; i++) {
     //Position
-    const x = Math.random() * parameters.radius
-    const branchAngle =
-      ((i % parameters.branches) / parameters.branches) * 2 * Math.PI
-    const spinAngle = x * parameters.spin
+    const x = Math.random() * RADIUS
+    const branchAngle = ((i % BRANCHES) / BRANCHES) * 2 * Math.PI
+    const spinAngle = x * SPIN
 
     const {
       x: randomX,
       y: randomY,
       z: randomZ,
-    } = getRandomStartPosition(parameters.randomnessPower)
+    } = getRandomStartPosition(RANDOMNESS_POWER)
 
     positions[i * 3] = Math.sin(branchAngle + spinAngle) * x + randomX
     positions[i * 3 + 1] = randomY
@@ -74,7 +67,7 @@ function generateGalaxy(count: number) {
     //Color
 
     const mixedColor = colorInside.clone()
-    mixedColor.lerp(colorOutside, x / parameters.radius)
+    mixedColor.lerp(colorOutside, x / RADIUS)
 
     colors[i * 3 + 0] = mixedColor.r
     colors[i * 3 + 1] = mixedColor.g
@@ -86,7 +79,7 @@ function generateGalaxy(count: number) {
 
   const material = new PointsMaterial({
     color: 'white',
-    size: parameters.size,
+    size: SIZE,
     depthWrite: false,
     sizeAttenuation: true,
     blending: AdditiveBlending,
@@ -100,29 +93,24 @@ function generateGalaxy(count: number) {
   return points
 }
 
-export const Galaxy = ({ count }: Props) => {
+export const Galaxy = () => {
   const classes = useStyles()
-  const { scene, useRenderLoop, camera } = useCoreContext()
+  const { scene, useRenderLoop } = useCoreContext()
   const [points, setPoints] = useState<Points>(new Points())
   const clock = useMemo(() => new Clock(), [])
   const projectStars = useSelector(projectStarDataItemsSelector)
 
-  useEffect(() => {
-    setPoints(generateGalaxy(count))
-  }, [count])
+  const handleProjectStarRender = useCallback(
+    (model: Mesh) => {
+      points.remove(model)
+      points.add(model)
+    },
+    [points]
+  )
 
   useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      // const star = getPointerModelName(e, scene, camera, 'project_star')
-      // if (!star) return
-      // star.scale.multiplyScalar(0.1)
-    }
-    window.addEventListener('mousemove', handler)
-
-    return () => {
-      window.removeEventListener('mousemove', handler)
-    }
-  }, [camera, scene])
+    setPoints(generateGalaxy())
+  }, [])
 
   useEffect(() => {
     scene.add(points)
@@ -134,7 +122,7 @@ export const Galaxy = ({ count }: Props) => {
 
   useRenderLoop(
     () => {
-      points.rotation.y = clock.getElapsedTime() * 0.05
+      points.rotation.y = clock.getElapsedTime() * 0.02
     },
     'galaxy',
     [points, clock]
@@ -149,13 +137,8 @@ export const Galaxy = ({ count }: Props) => {
         .map((star) => (
           <ProjectStar
             key={star.id}
-            galaxy={points}
-            position={getRandomProjectStarPosition(
-              2,
-              parameters.spin,
-              parameters.branches,
-              parameters.radius - 2
-            )}
+            onRender={handleProjectStarRender}
+            star={star}
           />
         ))}
     </>

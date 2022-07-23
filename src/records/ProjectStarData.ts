@@ -3,6 +3,7 @@ import { ProjectStarParams, ProjectStarRecord } from './ProjectStar'
 
 const defaultValue = {
   items: Map<string, ProjectStarRecord>(),
+  currentStar: null as ProjectStarRecord | null,
 }
 
 export class ProjectStarDataRecord extends Record(defaultValue) {
@@ -29,5 +30,21 @@ export class ProjectStarDataRecord extends Record(defaultValue) {
       const record = ProjectStarRecord.create(item)
       return items.set(record.id, record)
     })
+  }
+
+  public setItemIsRendered(id: string, isRendered: boolean) {
+    return this.update('items', (items) =>
+      items.update(id, (item) =>
+        (item as ProjectStarRecord).setIsRendered(isRendered)
+      )
+    )
+  }
+
+  public setCurrentStar(id: string) {
+    return this.set('currentStar', this.items.get(id) as ProjectStarRecord)
+  }
+
+  public clearCurrentStar() {
+    return this.set('currentStar', null)
   }
 }
