@@ -8,6 +8,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100vw',
     height: '100vh',
     top: 0,
+    pointerEvents: 'none',
   },
 }))
 

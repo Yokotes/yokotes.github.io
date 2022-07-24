@@ -4,6 +4,9 @@ import { Record } from 'immutable'
 const defaultValue = {
   id: '',
   name: '',
+  url: '',
+  topics: [] as string[],
+  isPortfolio: false,
   isRendered: false,
 }
 

@@ -36,7 +36,8 @@ const starGeomentry = new CircleBufferGeometry(0.03)
 const star = new Mesh(starGeomentry, starMaterial)
 
 PROJECT_STAR_MODEL.renderOrder = COUNT + 1
-star.renderOrder = COUNT + 2
+borderCircle.renderOrder = COUNT + 1
+star.renderOrder = COUNT + 1
 star.name = 'star'
 
 PROJECT_STAR_MODEL.add(borderCircle)

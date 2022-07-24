@@ -1,5 +1,5 @@
-import { CircularProgress, makeStyles } from '@material-ui/core'
-import React, { useEffect, useState } from 'react'
+import { makeStyles } from '@material-ui/core'
+import React from 'react'
 import { useSelector } from 'react-redux'
 import { projectStarDataCurrentItemSelector } from '../selectors'
 
@@ -15,29 +15,21 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export const ProjectShortInfo = () => {
-  const [isLoading, setIsLoading] = useState(false)
   const currentStar = useSelector(projectStarDataCurrentItemSelector)
-
-  useEffect(() => {
-    if (!currentStar) return
-
-    setIsLoading(true)
-    const timerId = setTimeout(() => {
-      setIsLoading(false)
-    }, 500)
-
-    return () => {
-      clearTimeout(timerId)
-    }
-  }, [currentStar])
 
   const classes = useStyles()
   return (
     <div className={classes.shortInfo}>
-      {isLoading ? (
-        <CircularProgress color="secondary" />
+      {currentStar ? (
+        <>
+          <div>Name: {currentStar.name}</div>
+          <div>Topics: {currentStar.topics.join(', ')}</div>
+          <div>
+            <a href={currentStar.url}>Link</a>
+          </div>
+        </>
       ) : (
-        <div>{currentStar ? currentStar.name : 'Move cursor to the star'} </div>
+        'Move cursor to a star'
       )}
     </div>
   )
