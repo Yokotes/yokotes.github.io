@@ -122,7 +122,7 @@ export const Galaxy = () => {
 
   useRenderLoop(
     () => {
-      points.rotation.y = clock.getElapsedTime() * 0.02
+      points.rotation.y = clock.getElapsedTime() * 0.01
     },
     'galaxy',
     [points, clock]

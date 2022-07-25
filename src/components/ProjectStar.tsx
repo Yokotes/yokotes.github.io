@@ -27,18 +27,23 @@ export const ProjectStar = ({ onRender, star }: Props) => {
   // Hover callback
   const handleHover = useCallback(
     (e: MouseEvent) => {
-      const hover = !!getPointerModelName(
+      const object = getPointerModelName(
         e,
         [model, ...model.children.flat()],
         camera
       )
 
-      if (isHover === hover) return
+      if (isHover === !!object) return
 
-      setIsHover(hover)
+      setIsHover(!!object)
 
-      if (hover) {
-        dispatch(projectStarDataSetCurrentItemAction(star.id))
+      if (object) {
+        dispatch(
+          projectStarDataSetCurrentItemAction({
+            id: star.id,
+            position: { x: e.clientX, y: e.clientY, z: 0 },
+          })
+        )
         return
       }
 

@@ -1,36 +1,41 @@
-import { makeStyles } from '@material-ui/core'
-import React from 'react'
+import { makeStyles, Theme } from '@material-ui/core'
+import React, { useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { projectStarDataCurrentItemSelector } from '../selectors'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<Theme, { selected: boolean }>((theme) => ({
   shortInfo: {
     color: 'white',
     position: 'absolute',
-    top: 10,
-    right: 10,
     padding: theme.spacing(2, 4),
-    border: '1px solid white',
+    opacity: ({ selected }) => (selected ? 1 : 0),
+    transition: 'transform 0.75s, opacity 0.75s',
+    transform: ({ selected }) =>
+      selected ? 'translateY(0)' : 'translateY(-20px)',
+    backgroundColor: 'rgba(120, 120, 120, 0.85)',
+    width: 300,
   },
 }))
 
 export const ProjectShortInfo = () => {
-  const currentStar = useSelector(projectStarDataCurrentItemSelector)
+  const {
+    object,
+    position: { x, y },
+  } = useSelector(projectStarDataCurrentItemSelector)
+  const classes = useStyles({ selected: !!object })
+  const ref = useRef<HTMLDivElement>(null)
 
-  const classes = useStyles()
   return (
-    <div className={classes.shortInfo}>
-      {currentStar ? (
-        <>
-          <div>Name: {currentStar.name}</div>
-          <div>Topics: {currentStar.topics.join(', ')}</div>
-          <div>
-            <a href={currentStar.url}>Link</a>
-          </div>
-        </>
-      ) : (
-        'Move cursor to a star'
-      )}
+    <div
+      className={classes.shortInfo}
+      ref={ref}
+      style={{
+        left: x - 150,
+        top: y - 50 - (ref.current?.clientHeight || 0),
+      }}
+    >
+      <div>Name: {object?.name}</div>
+      <div>Topics: {object?.topics?.join(', ')}</div>
     </div>
   )
 }

@@ -18,5 +18,5 @@ export const getPointerModelName = (
     .intersectObjects(objects)
     .sort((objA, objB) => objA.distance - objB.distance)[0]
 
-  return intersect && intersect.object.name
+  return intersect && intersect.object
 }

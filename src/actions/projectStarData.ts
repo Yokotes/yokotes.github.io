@@ -24,7 +24,8 @@ export const projectStarDataSetItemIsRendered = createAction(
 
 export const projectStarDataSetCurrentItemAction = createAction(
   'project_star_data_set_current_item'.toUpperCase(),
-  (payload: string) => payload
+  (payload: { id: string; position: { x: number; y: number; z: number } }) =>
+    payload
 )()
 
 export const projectStarDataClearCurrentItemAction = createAction(
