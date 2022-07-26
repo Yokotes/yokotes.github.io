@@ -34,8 +34,7 @@ export const projectStarData = (state = initialState, actions: AppActions) => {
   }
 
   if (isActionOf(projectStarDataSetCurrentItemAction, actions)) {
-    const { id, position } = actions.payload
-    return state.setCurrentStar(id, position)
+    return state.setCurrentStar(actions.payload)
   }
 
   if (isActionOf(projectStarDataClearCurrentItemAction, actions)) {

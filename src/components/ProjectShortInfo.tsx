@@ -1,41 +1,64 @@
-import { makeStyles, Theme } from '@material-ui/core'
+import { Grid, makeStyles, Typography } from '@material-ui/core'
 import React, { useRef } from 'react'
-import { useSelector } from 'react-redux'
-import { projectStarDataCurrentItemSelector } from '../selectors'
+import { ProjectStarRecord } from '../records'
 
-const useStyles = makeStyles<Theme, { selected: boolean }>((theme) => ({
+const useStyles = makeStyles((theme) => ({
   shortInfo: {
     color: 'white',
     position: 'absolute',
-    padding: theme.spacing(2, 4),
-    opacity: ({ selected }) => (selected ? 1 : 0),
-    transition: 'transform 0.75s, opacity 0.75s',
-    transform: ({ selected }) =>
-      selected ? 'translateY(0)' : 'translateY(-20px)',
-    backgroundColor: 'rgba(120, 120, 120, 0.85)',
+    padding: theme.spacing(1),
+    backgroundColor: 'rgba(50, 50, 50, 0.8)',
     width: 300,
+  },
+
+  content: {
+    fontSize: '0.95rem',
+    color: 'rgb(240, 240, 240)',
+  },
+
+  title: {
+    fontSize: '1.1rem',
+    textDecoration: 'underline',
   },
 }))
 
-export const ProjectShortInfo = () => {
-  const {
-    object,
-    position: { x, y },
-  } = useSelector(projectStarDataCurrentItemSelector)
-  const classes = useStyles({ selected: !!object })
+interface Props {
+  star: ProjectStarRecord
+  position?: { x: number; y: number }
+}
+
+export const ProjectShortInfo = ({ star, position }: Props) => {
+  const classes = useStyles()
   const ref = useRef<HTMLDivElement>(null)
 
   return (
-    <div
+    <Grid
+      container
+      direction="column"
+      spacing={2}
       className={classes.shortInfo}
       ref={ref}
       style={{
-        left: x - 150,
-        top: y - 50 - (ref.current?.clientHeight || 0),
+        left: (position?.x || 0) - 150,
+        top: (position?.y || 0) - 40 - (ref.current?.clientHeight || 0),
       }}
     >
-      <div>Name: {object?.name}</div>
-      <div>Topics: {object?.topics?.join(', ')}</div>
-    </div>
+      <Grid item>
+        <Typography variant="body1" className={classes.title}>
+          Name
+        </Typography>
+        <Typography variant="body2" className={classes.content}>
+          {star.name}
+        </Typography>
+      </Grid>
+      <Grid item>
+        <Typography variant="body1" className={classes.title}>
+          Topics
+        </Typography>
+        <Typography variant="body2" className={classes.content}>
+          {star.topics?.join(', ')}
+        </Typography>
+      </Grid>
+    </Grid>
   )
 }

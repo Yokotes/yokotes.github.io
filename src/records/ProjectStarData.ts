@@ -4,14 +4,7 @@ import { ProjectStarParams, ProjectStarRecord } from './ProjectStar'
 const defaultValue = {
   items: Map<string, ProjectStarRecord>(),
   isAllDisplayed: false,
-  currentStar: {
-    object: null as ProjectStarRecord | null,
-    position: {
-      x: 0,
-      y: 0,
-      z: 0,
-    },
-  },
+  currentStar: null as ProjectStarRecord | null,
 }
 
 export class ProjectStarDataRecord extends Record(defaultValue) {
@@ -48,21 +41,12 @@ export class ProjectStarDataRecord extends Record(defaultValue) {
     )
   }
 
-  public setCurrentStar(
-    id: string,
-    position: { x: number; y: number; z: number }
-  ) {
-    return this.set('currentStar', {
-      object: this.items.get(id) as ProjectStarRecord,
-      position,
-    })
+  public setCurrentStar(id: string) {
+    return this.set('currentStar', this.items.get(id) as ProjectStarRecord)
   }
 
   public clearCurrentStar() {
-    return this.set('currentStar', {
-      object: null,
-      position: { x: 0, y: 0, z: 0 },
-    })
+    return this.set('currentStar', null)
   }
 
   public setIsAllDisplayed(val: boolean) {

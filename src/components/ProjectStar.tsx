@@ -1,15 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Mesh } from 'three'
-import {
-  projectStarDataClearCurrentItemAction,
-  projectStarDataSetCurrentItemAction,
-  projectStarDataSetItemIsRendered,
-} from '../actions'
+import { projectStarDataSetItemIsRendered } from '../actions'
 import { PARAMETERS, PROJECT_STAR_MODEL } from '../constants'
 import { useCoreContext } from '../contexts'
 import { getPointerModelName, getRandomProjectStarPosition } from '../helpers'
 import { ProjectStarRecord } from '../records'
+import { ProjectShortInfo } from './ProjectShortInfo'
 
 const { SPIN, BRANCHES, RADIUS } = PARAMETERS
 
@@ -22,6 +19,10 @@ export const ProjectStar = ({ onRender, star }: Props) => {
   const { camera, useRenderLoop } = useCoreContext()
   const model = useMemo(() => PROJECT_STAR_MODEL.clone(true), [])
   const [isHover, setIsHover] = useState(false)
+  const [position, setPosition] = useState<{
+    x: number
+    y: number
+  }>()
   const dispatch = useDispatch()
 
   // Hover callback
@@ -34,22 +35,14 @@ export const ProjectStar = ({ onRender, star }: Props) => {
       )
 
       if (isHover === !!object) return
-
       setIsHover(!!object)
 
       if (object) {
-        dispatch(
-          projectStarDataSetCurrentItemAction({
-            id: star.id,
-            position: { x: e.clientX, y: e.clientY, z: 0 },
-          })
-        )
+        setPosition({ x: e.clientX, y: e.clientY })
         return
       }
-
-      dispatch(projectStarDataClearCurrentItemAction())
     },
-    [camera, dispatch, isHover, model, star.id]
+    [camera, isHover, model]
   )
 
   // Change cursor when isHover === `true`
@@ -107,5 +100,5 @@ export const ProjectStar = ({ onRender, star }: Props) => {
     [model, camera, isHover]
   )
 
-  return null
+  return <>{isHover && <ProjectShortInfo star={star} position={position} />}</>
 }

@@ -1,6 +1,5 @@
 import { Grid, makeStyles } from '@material-ui/core'
 import React from 'react'
-import { ProjectShortInfo } from './ProjectShortInfo'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -14,9 +13,5 @@ const useStyles = makeStyles((theme) => ({
 
 export const Overlay = () => {
   const classes = useStyles()
-  return (
-    <Grid className={classes.container}>
-      <ProjectShortInfo />
-    </Grid>
-  )
+  return <Grid className={classes.container}>{/* <ProjectShortInfo /> */}</Grid>
 }
