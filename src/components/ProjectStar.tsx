@@ -1,10 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Mesh } from 'three'
+import { Mesh, Vector3 } from 'three'
 import { projectStarDataSetItemIsRendered } from '../actions'
 import { PARAMETERS, PROJECT_STAR_MODEL } from '../constants'
 import { useCoreContext } from '../contexts'
-import { getPointerModelName, getRandomProjectStarPosition } from '../helpers'
+import {
+  convertPositionToScreen,
+  getPointerModelName,
+  getRandomProjectStarPosition,
+} from '../helpers'
 import { ProjectStarRecord } from '../records'
 import { ProjectShortInfo } from './ProjectShortInfo'
 
@@ -19,10 +23,7 @@ export const ProjectStar = ({ onRender, star }: Props) => {
   const { camera, useRenderLoop } = useCoreContext()
   const model = useMemo(() => PROJECT_STAR_MODEL.clone(true), [])
   const [isHover, setIsHover] = useState(false)
-  const [position, setPosition] = useState<{
-    x: number
-    y: number
-  }>()
+  const [position, setPosition] = useState<Vector3>()
   const dispatch = useDispatch()
 
   // Hover callback
@@ -38,7 +39,7 @@ export const ProjectStar = ({ onRender, star }: Props) => {
       setIsHover(!!object)
 
       if (object) {
-        setPosition({ x: e.clientX, y: e.clientY })
+        // setPosition({ x: e.clientX, y: e.clientY })
         return
       }
     },
@@ -72,21 +73,23 @@ export const ProjectStar = ({ onRender, star }: Props) => {
         2,
         SPIN,
         BRANCHES,
-        RADIUS - 2.5
+        RADIUS
       )
 
       dispatch(
         projectStarDataSetItemIsRendered({ id: star.id, isRendered: true })
       )
-      model.position.set(x, y, z)
+      model.position.set(0, 0, 0)
+
+      setPosition(model.position)
     }
     onRender(model)
-  }, [dispatch, model, onRender, star.id, star.isRendered])
+  }, [camera, dispatch, model, onRender, star.id, star.isRendered])
 
   // Render loop
   useRenderLoop(
     () => {
-      model.lookAt(camera.position)
+      // model.lookAt(camera.position)
 
       if (isHover && model.scale.x < 2) {
         model.scale.addScalar(0.1)
@@ -100,5 +103,5 @@ export const ProjectStar = ({ onRender, star }: Props) => {
     [model, camera, isHover]
   )
 
-  return <>{isHover && <ProjectShortInfo star={star} position={position} />}</>
+  return <>{/* <ProjectShortInfo star={star} position={position} /> */}</>
 }

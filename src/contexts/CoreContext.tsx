@@ -2,6 +2,10 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { PerspectiveCamera, Scene, WebGLRenderer } from 'three'
 import { v4 } from 'uuid'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass'
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass'
+import { FocusShader as Shader } from 'three/examples/jsm/shaders/FocusShader'
 
 interface Values {
   renderer: WebGLRenderer
@@ -23,24 +27,33 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [handlers, setHandlers] = useState<HandlerConfig[]>([])
-  const renderer = useMemo(() => new WebGLRenderer(), [])
+  const renderer = useMemo(
+    () => new WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true }),
+    []
+  )
+  const composer = useMemo(() => new EffectComposer(renderer), [renderer])
   const scene = useMemo(() => new Scene(), [])
   const camera = useMemo(
     () =>
       new PerspectiveCamera(
         75,
         window.innerWidth / window.innerHeight,
-        0.1,
-        1000
+        1e-6,
+        1e27
       ),
     []
+  )
+  const shaderPass = useMemo(() => new ShaderPass(Shader), [])
+  const renderPass = useMemo(
+    () => new RenderPass(scene, camera),
+    [camera, scene]
   )
   const controls = useMemo(
     () => new OrbitControls(camera, renderer.domElement),
     [renderer, camera]
   )
   controls.enableDamping = true
-  controls.enableZoom = false
+  // controls.enableZoom = false
 
   const useRenderLoop = (handler: Handler, name: string, deps: any[] = []) => {
     useEffect(() => {
@@ -73,6 +86,9 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
     renderer.setSize(window.innerWidth, window.innerHeight)
 
+    composer.addPass(renderPass)
+    // composer.addPass(shaderPass)
+
     window.addEventListener('resize', () => {
       // Update camera
       camera.aspect = window.innerWidth / window.innerHeight
@@ -90,14 +106,16 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
       })
     }
-  }, [renderer, scene, camera])
+  }, [renderer, scene, camera, composer, renderPass, shaderPass])
 
   useEffect(() => {
     let loopId = 0
 
     const loop = () => {
-      renderer.render(scene, camera)
+      composer.render()
       controls.update()
+      // camera.near = controls.target.distanceTo(controls.object.position) / 0.1
+      camera.updateProjectionMatrix()
       handlers.forEach(({ handler }) => handler())
 
       loopId = requestAnimationFrame(loop)
@@ -108,7 +126,7 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => {
       cancelAnimationFrame(loopId)
     }
-  }, [camera, controls, handlers, renderer, scene])
+  }, [camera, composer, controls, handlers, renderer, scene])
 
   return (
     <CoreContext.Provider value={{ renderer, scene, camera, useRenderLoop }}>

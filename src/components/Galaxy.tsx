@@ -84,8 +84,8 @@ function generateGalaxy() {
     sizeAttenuation: true,
     blending: AdditiveBlending,
     vertexColors: true,
-    transparent: true,
-    alphaMap: shape,
+    // transparent: true,
+    map: shape,
   })
 
   const points = new Points(geometry, material)
@@ -122,7 +122,7 @@ export const Galaxy = () => {
 
   useRenderLoop(
     () => {
-      points.rotation.y = clock.getElapsedTime() * 0.01
+      // points.rotation.y = clock.getElapsedTime() * 0.01
     },
     'galaxy',
     [points, clock]
