@@ -95,7 +95,7 @@ function generateGalaxy() {
 
 export const Galaxy = () => {
   const classes = useStyles()
-  const { scene, useRenderLoop } = useCoreContext()
+  const { scene, useRenderLoop, controls } = useCoreContext()
   const [points, setPoints] = useState<Points>(new Points())
   const clock = useMemo(() => new Clock(), [])
   const projectStars = useSelector(projectStarDataItemsSelector)
@@ -113,7 +113,7 @@ export const Galaxy = () => {
   }, [])
 
   useEffect(() => {
-    scene.add(points)
+    // scene.add(points)
 
     return () => {
       scene.remove(points)
@@ -123,6 +123,10 @@ export const Galaxy = () => {
   useRenderLoop(
     () => {
       // points.rotation.y = clock.getElapsedTime() * 0.01
+      if (controls.target.distanceTo(controls.object.position) <= 1) {
+        ;(points.material as PointsMaterial).opacity =
+          controls.target.distanceTo(controls.object.position)
+      }
     },
     'galaxy',
     [points, clock]

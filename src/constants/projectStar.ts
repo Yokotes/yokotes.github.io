@@ -11,7 +11,7 @@ import {
 
 const { COUNT } = PARAMETERS
 
-const bgGeometry = new SphereBufferGeometry(0.0001)
+const bgGeometry = new SphereBufferGeometry(0.1)
 // const borderGeometry = new RingBufferGeometry(0.1, 0.11, 32)
 
 const bgMaterial = new MeshBasicMaterial({

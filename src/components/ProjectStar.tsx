@@ -2,7 +2,11 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Mesh, Vector3 } from 'three'
 import { projectStarDataSetItemIsRendered } from '../actions'
-import { PARAMETERS, PROJECT_STAR_MODEL } from '../constants'
+import {
+  generatePointsCloud,
+  PARAMETERS,
+  PROJECT_STAR_MODEL,
+} from '../constants'
 import { useCoreContext } from '../contexts'
 import {
   convertPositionToScreen,
@@ -20,7 +24,7 @@ interface Props {
 }
 
 export const ProjectStar = ({ onRender, star }: Props) => {
-  const { camera, useRenderLoop } = useCoreContext()
+  const { camera, useRenderLoop, scene } = useCoreContext()
   const model = useMemo(() => PROJECT_STAR_MODEL.clone(true), [])
   const [isHover, setIsHover] = useState(false)
   const [position, setPosition] = useState<Vector3>()
@@ -45,6 +49,10 @@ export const ProjectStar = ({ onRender, star }: Props) => {
     },
     [camera, isHover, model]
   )
+
+  useEffect(() => {
+    // model.add(POINTS_CLOUD.clone())
+  }, [model])
 
   // Change cursor when isHover === `true`
   useEffect(() => {
@@ -80,11 +88,12 @@ export const ProjectStar = ({ onRender, star }: Props) => {
         projectStarDataSetItemIsRendered({ id: star.id, isRendered: true })
       )
       model.position.set(0, 0, 0)
+      // model.add(generatePointsCLoud())
 
       setPosition(model.position)
     }
-    onRender(model)
-  }, [camera, dispatch, model, onRender, star.id, star.isRendered])
+    scene.add(generatePointsCloud())
+  }, [camera, dispatch, model, onRender, scene, star.id, star.isRendered])
 
   // Render loop
   useRenderLoop(

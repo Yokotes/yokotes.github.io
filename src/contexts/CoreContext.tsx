@@ -12,6 +12,7 @@ interface Values {
   scene: Scene
   camera: PerspectiveCamera
   useRenderLoop: (handler: Handler, name: string, deps?: any[]) => void
+  controls: OrbitControls
 }
 
 type Handler = () => void
@@ -79,9 +80,9 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
     const container = document.querySelector('#scene-container')
     container?.append(renderer.domElement)
 
-    camera.position.x = 2.5
-    camera.position.y = 3.2
-    camera.position.z = 2.5
+    camera.position.x = 4
+    camera.position.y = 4
+    camera.position.z = 4
     scene.add(camera)
 
     renderer.setSize(window.innerWidth, window.innerHeight)
@@ -114,7 +115,7 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
     const loop = () => {
       composer.render()
       controls.update()
-      // camera.near = controls.target.distanceTo(controls.object.position) / 0.1
+      // camera.near = c / 0.1
       camera.updateProjectionMatrix()
       handlers.forEach(({ handler }) => handler())
 
@@ -129,7 +130,9 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [camera, composer, controls, handlers, renderer, scene])
 
   return (
-    <CoreContext.Provider value={{ renderer, scene, camera, useRenderLoop }}>
+    <CoreContext.Provider
+      value={{ renderer, scene, camera, useRenderLoop, controls }}
+    >
       {children}
     </CoreContext.Provider>
   )
