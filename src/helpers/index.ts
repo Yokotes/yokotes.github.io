@@ -1,3 +1,5 @@
 export * from './getRandomStarPosition'
 export * from './getPointerModelName'
 export * from './convertPositionToScreen'
+export * from './generatePointsCloud'
+export * from './generateGalaxy'

@@ -2,16 +2,13 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Mesh, Vector3 } from 'three'
 import { projectStarDataSetItemIsRendered } from '../actions'
-import {
-  generatePointsCloud,
-  PARAMETERS,
-  PROJECT_STAR_MODEL,
-} from '../constants'
+import { PARAMETERS, PROJECT_STAR_MODEL } from '../constants'
 import { useCoreContext } from '../contexts'
 import {
   convertPositionToScreen,
   getPointerModelName,
   getRandomProjectStarPosition,
+  generatePointsCloud,
 } from '../helpers'
 import { ProjectStarRecord } from '../records'
 import { ProjectShortInfo } from './ProjectShortInfo'
@@ -24,7 +21,7 @@ interface Props {
 }
 
 export const ProjectStar = ({ onRender, star }: Props) => {
-  const { camera, useRenderLoop, scene } = useCoreContext()
+  const { camera, scene } = useCoreContext()
   const model = useMemo(() => PROJECT_STAR_MODEL.clone(true), [])
   const [isHover, setIsHover] = useState(false)
   const [position, setPosition] = useState<Vector3>()
@@ -43,7 +40,6 @@ export const ProjectStar = ({ onRender, star }: Props) => {
       setIsHover(!!object)
 
       if (object) {
-        // setPosition({ x: e.clientX, y: e.clientY })
         return
       }
     },
@@ -88,29 +84,14 @@ export const ProjectStar = ({ onRender, star }: Props) => {
         projectStarDataSetItemIsRendered({ id: star.id, isRendered: true })
       )
       model.position.set(0, 0, 0)
-      // model.add(generatePointsCLoud())
 
       setPosition(model.position)
     }
-    scene.add(generatePointsCloud())
+    const cloud = generatePointsCloud()
+    cloud.scale.set(0.05, 0.05, 0.05)
+    scene.add(cloud)
+    scene.add(model)
   }, [camera, dispatch, model, onRender, scene, star.id, star.isRendered])
-
-  // Render loop
-  useRenderLoop(
-    () => {
-      // model.lookAt(camera.position)
-
-      if (isHover && model.scale.x < 2) {
-        model.scale.addScalar(0.1)
-      }
-
-      if (!isHover && model.scale.x > 1) {
-        model.scale.addScalar(-0.1)
-      }
-    },
-    `${model.name}_update`,
-    [model, camera, isHover]
-  )
 
   return <>{/* <ProjectShortInfo star={star} position={position} /> */}</>
 }

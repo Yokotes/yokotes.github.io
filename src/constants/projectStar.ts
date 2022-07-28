@@ -1,47 +1,28 @@
 import { PARAMETERS } from './parameters'
 import {
-  CircleBufferGeometry,
-  RingBufferGeometry,
-  MeshBasicMaterial,
   Color,
   Mesh,
-  TextureLoader,
   SphereBufferGeometry,
+  TextureLoader,
+  MeshLambertMaterial,
 } from 'three'
 
 const { COUNT } = PARAMETERS
 
-const bgGeometry = new SphereBufferGeometry(0.1)
-// const borderGeometry = new RingBufferGeometry(0.1, 0.11, 32)
+const bgGeometry = new SphereBufferGeometry(0.0001)
+const textureLoader = new TextureLoader()
+const starTexture = textureLoader.load('/images/sun.png')
 
-const bgMaterial = new MeshBasicMaterial({
-  color: new Color('green'),
+const bgMaterial = new MeshLambertMaterial({
   depthWrite: false,
   transparent: true,
   opacity: 1,
+  map: starTexture,
 })
-const borderMaterial = bgMaterial.clone()
-borderMaterial.color = new Color('#fff')
 
+// bgMaterial.color = new Color('blue')
 const PROJECT_STAR_MODEL = new Mesh(bgGeometry, bgMaterial)
-// const borderCircle = new Mesh(borderGeometry, borderMaterial)
-
-// const starTexture = new TextureLoader().load('/images/star.png')
-// const starMaterial = new MeshBasicMaterial({
-//   alphaMap: starTexture,
-//   depthWrite: false,
-//   transparent: true,
-//   opacity: 1,
-// })
-// const starGeomentry = new CircleBufferGeometry(0.03)
-// const star = new Mesh(starGeomentry, starMaterial)
 
 PROJECT_STAR_MODEL.renderOrder = COUNT + 1
-// borderCircle.renderOrder = COUNT + 1
-// star.renderOrder = COUNT + 1
-// star.name = 'star'
-
-// PROJECT_STAR_MODEL.add(borderCircle)
-// PROJECT_STAR_MODEL.add(star)
 
 export { PROJECT_STAR_MODEL }

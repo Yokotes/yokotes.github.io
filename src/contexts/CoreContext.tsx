@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { PerspectiveCamera, Scene, WebGLRenderer } from 'three'
+import { AmbientLight, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
 import { v4 } from 'uuid'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
@@ -80,10 +80,13 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
     const container = document.querySelector('#scene-container')
     container?.append(renderer.domElement)
 
+    const light = new AmbientLight()
+
     camera.position.x = 4
     camera.position.y = 4
     camera.position.z = 4
     scene.add(camera)
+    scene.add(light)
 
     renderer.setSize(window.innerWidth, window.innerHeight)
 
