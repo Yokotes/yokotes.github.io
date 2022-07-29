@@ -1,5 +1,5 @@
 export const PARAMETERS = {
-  SIZE: 0.015,
+  SIZE: 0.045,
   RADIUS: 5,
   BRANCHES: 8,
   SPIN: 0.6,

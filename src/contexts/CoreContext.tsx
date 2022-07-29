@@ -1,11 +1,18 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { AmbientLight, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
+import {
+  AmbientLight,
+  PerspectiveCamera,
+  Scene,
+  Vector2,
+  WebGLRenderer,
+} from 'three'
 import { v4 } from 'uuid'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass'
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass'
-import { FocusShader as Shader } from 'three/examples/jsm/shaders/FocusShader'
+import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader'
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass'
 
 interface Values {
   renderer: WebGLRenderer
@@ -29,7 +36,7 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [handlers, setHandlers] = useState<HandlerConfig[]>([])
   const renderer = useMemo(
-    () => new WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true }),
+    () => new WebGLRenderer({ logarithmicDepthBuffer: true }),
     []
   )
   const composer = useMemo(() => new EffectComposer(renderer), [renderer])
@@ -44,7 +51,7 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
       ),
     []
   )
-  const shaderPass = useMemo(() => new ShaderPass(Shader), [])
+  // const shaderPass = useMemo(() => new ShaderPass(Shader), [])
   const renderPass = useMemo(
     () => new RenderPass(scene, camera),
     [camera, scene]
@@ -89,9 +96,18 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
     scene.add(light)
 
     renderer.setSize(window.innerWidth, window.innerHeight)
+    composer.setSize(window.innerWidth, window.innerHeight)
 
     composer.addPass(renderPass)
-    // composer.addPass(shaderPass)
+    composer.addPass(new ShaderPass(FXAAShader))
+    composer.addPass(
+      new UnrealBloomPass(
+        new Vector2(window.innerWidth, window.innerHeight),
+        1,
+        1.25,
+        0
+      )
+    )
 
     window.addEventListener('resize', () => {
       // Update camera
@@ -99,6 +115,7 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
       camera.updateProjectionMatrix()
       renderer.setSize(window.innerWidth, window.innerHeight)
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+      composer.setSize(window.innerWidth, window.innerHeight)
     })
 
     return () => {
@@ -108,9 +125,10 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
         camera.updateProjectionMatrix()
         renderer.setSize(window.innerWidth, window.innerHeight)
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+        composer.setSize(window.innerWidth, window.innerHeight)
       })
     }
-  }, [renderer, scene, camera, composer, renderPass, shaderPass])
+  }, [renderer, scene, camera, composer, renderPass])
 
   useEffect(() => {
     let loopId = 0

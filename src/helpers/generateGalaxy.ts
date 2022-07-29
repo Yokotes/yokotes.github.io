@@ -24,7 +24,7 @@ const {
 export const generateGalaxy = () => {
   const geometry = new BufferGeometry()
   const textureLoader = new TextureLoader()
-  const shape = textureLoader.load('/images/shape.png')
+  const shape = textureLoader.load('/images/star2.png')
 
   const positions = new Float32Array(COUNT * 3)
   const colors = new Float32Array(COUNT * 3)

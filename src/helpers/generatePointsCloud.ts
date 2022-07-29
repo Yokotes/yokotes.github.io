@@ -12,7 +12,7 @@ const COUNT = 5000
 export function generatePointsCloud() {
   const geometry = new BufferGeometry()
   const textureLoader = new TextureLoader()
-  const shape = textureLoader.load('/images/shape.png')
+  const shape = textureLoader.load('/images/star2.png')
 
   const positions = new Float32Array(COUNT * 3)
   const colors = new Float32Array(COUNT * 3)
@@ -32,7 +32,7 @@ export function generatePointsCloud() {
 
   const material = new PointsMaterial({
     color: 'white',
-    size: 0.0005,
+    size: 0.0015,
     depthWrite: false,
     sizeAttenuation: true,
     blending: AdditiveBlending,
