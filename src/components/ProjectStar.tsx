@@ -1,17 +1,17 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { Mesh, Vector3 } from 'three'
 import { projectStarDataSetItemIsRendered } from '../actions'
 import { PARAMETERS, PROJECT_STAR_MODEL } from '../constants'
 import { useCoreContext } from '../contexts'
 import {
-  convertPositionToScreen,
-  getPointerModelName,
   getRandomProjectStarPosition,
   generatePointsCloud,
+  zoomAt,
 } from '../helpers'
 import { ProjectStarRecord } from '../records'
 import { ProjectShortInfo } from './ProjectShortInfo'
+import TWEEN from '@tweenjs/tween.js'
 
 const { SPIN, BRANCHES, RADIUS } = PARAMETERS
 
@@ -21,77 +21,66 @@ interface Props {
 }
 
 export const ProjectStar = ({ onRender, star }: Props) => {
-  const { camera, scene } = useCoreContext()
+  const { camera, scene, useRenderLoop, controls } = useCoreContext()
   const model = useMemo(() => PROJECT_STAR_MODEL.clone(true), [])
-  const [isHover, setIsHover] = useState(false)
-  const [position, setPosition] = useState<Vector3>()
+  // const [position, setPosition] = useState<Vector3>()
+  const labelRef = useRef<HTMLDivElement>(null)
   const dispatch = useDispatch()
 
-  // Hover callback
-  const handleHover = useCallback(
-    (e: MouseEvent) => {
-      const object = getPointerModelName(
-        e,
-        [model, ...model.children.flat()],
-        camera
-      )
-
-      if (isHover === !!object) return
-      setIsHover(!!object)
-
-      if (object) {
-        return
-      }
-    },
-    [camera, isHover, model]
-  )
-
-  useEffect(() => {
-    // model.add(POINTS_CLOUD.clone())
-  }, [model])
-
-  // Change cursor when isHover === `true`
-  useEffect(() => {
-    if (isHover) {
-      document.body.style.cursor = 'pointer'
-      return
-    }
-
-    document.body.style.cursor = 'unset'
-  }, [isHover])
-
-  // Adding listener on hover
-  useEffect(() => {
-    window.addEventListener('mousemove', handleHover)
-
-    return () => {
-      window.removeEventListener('mousemove', handleHover)
-    }
-  }, [handleHover])
+  const handleLabelClick = () => {
+    const { x, y, z } = model.position
+    // controls.target.set(x, y, z)
+    // camera.zoom = 5
+    // camera.updateMatrix()
+    console.log(x, y, z)
+    zoomAt(model, camera, controls)
+    // scene.scale.multiplyScalar(5)
+    // controls.z
+    // console.log(controls.zoomIn(123))
+  }
 
   // Render star in galaxy
   useEffect(() => {
     if (!star.isRendered) {
       model.name = `project_star_${star.id}`
-      const { x, y, z } = getRandomProjectStarPosition(
-        2,
-        SPIN,
-        BRANCHES,
-        RADIUS
-      )
+      const { x, z } = getRandomProjectStarPosition(2, SPIN, BRANCHES, RADIUS)
 
       dispatch(
         projectStarDataSetItemIsRendered({ id: star.id, isRendered: true })
       )
-      model.position.set(0, 0, 0)
-
-      setPosition(model.position)
+      model.position.set(x, 0, z)
     }
     const cloud = generatePointsCloud()
     cloud.scale.set(0.05, 0.05, 0.05)
-    scene.add(cloud)
+
+    model.add(cloud)
     scene.add(model)
   }, [camera, dispatch, model, onRender, scene, star.id, star.isRendered])
 
-  return <>{/* <ProjectShortInfo star={star} position={position} /> */}</>
+  // Update label position
+  useRenderLoop(
+    () => {
+      if (!labelRef.current) return
+
+      const temp = new Vector3()
+
+      model.updateWorldMatrix(true, false)
+      model.getWorldPosition(temp)
+
+      temp.project(camera)
+
+      const x = (temp.x * 0.5 + 0.5) * window.innerWidth
+      const y = (temp.y * -0.5 + 0.5) * window.innerHeight
+
+      labelRef.current.style.transform = `translate(-50%, -50%) translate(${x}px,${y}px)`
+    },
+    `${model.name}_label_update`,
+    [model, labelRef]
+  )
+
+  return (
+    <>
+      <ProjectShortInfo star={star} ref={labelRef} onClick={handleLabelClick} />
+    </>
+  )
 }

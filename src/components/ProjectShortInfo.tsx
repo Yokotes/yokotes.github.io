@@ -1,22 +1,31 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core'
-import React, { useMemo, useRef } from 'react'
-import { Vector3 } from 'three'
-import { useCoreContext } from '../contexts'
-import { convertPositionToScreen } from '../helpers'
+import React, { RefObject } from 'react'
 import { ProjectStarRecord } from '../records'
 
 const useStyles = makeStyles((theme) => ({
   shortInfo: {
-    color: 'white',
     position: 'absolute',
-    padding: theme.spacing(1),
-    backgroundColor: 'rgba(50, 50, 50, 0.8)',
-    width: 300,
+    top: 0,
+    left: 0,
+    color: 'white',
+    cursor: 'pointer',
+    width: 'fit-content',
+    fontWeight: 'bold',
+    textShadow: ` -1px -1px 0 #000,
+     0   -1px 0 #000,
+     1px -1px 0 #000,
+     1px  0   0 #000,
+     1px  1px 0 #000,
+     0    1px 0 #000,
+    -1px  1px 0 #000,
+    -1px  0   0 #000`,
   },
 
   content: {
-    fontSize: '0.95rem',
-    color: 'rgb(240, 240, 240)',
+    fontSize: '1.5rem',
+    // textDecoration: 'underline',
+
+    // color: 'rgb(240, 240, 240)',
   },
 
   title: {
@@ -27,44 +36,31 @@ const useStyles = makeStyles((theme) => ({
 
 interface Props {
   star: ProjectStarRecord
-  position?: Vector3
+  onClick: () => void
 }
 
-export const ProjectShortInfo = ({ star, position }: Props) => {
-  const classes = useStyles()
-  const ref = useRef<HTMLDivElement>(null)
-  const { camera } = useCoreContext()
-  const pos = useMemo(
-    () => position && convertPositionToScreen(position, camera),
-    [camera, position]
-  )
+export const ProjectShortInfo = React.forwardRef(
+  ({ star, onClick }: Props, ref) => {
+    const classes = useStyles()
 
-  const handleClick = () => {
-    position && camera.lookAt(position)
-  }
-
-  return (
-    <Grid
-      container
-      direction="column"
-      spacing={2}
-      className={classes.shortInfo}
-      ref={ref}
-      style={{
-        left: (pos?.x || 0) - 150,
-        top: (pos?.y || 0) - 40 - (ref.current?.clientHeight || 0),
-      }}
-      onClick={handleClick}
-    >
-      <Grid item>
-        {/* <Typography variant="body1" className={classes.title}>
+    return (
+      <Grid
+        container
+        direction="column"
+        spacing={2}
+        className={classes.shortInfo}
+        ref={ref as RefObject<HTMLDivElement>}
+        onClick={onClick}
+      >
+        <Grid item>
+          {/* <Typography variant="body1" className={classes.title}>
           Name
         </Typography> */}
-        <Typography variant="body2" className={classes.content}>
-          {star.name}
-        </Typography>
-      </Grid>
-      {/* <Grid item>
+          <Typography variant="body1" className={classes.content}>
+            {star.name}
+          </Typography>
+        </Grid>
+        {/* <Grid item>
         <Typography variant="body1" className={classes.title}>
           Topics
         </Typography>
@@ -72,6 +68,7 @@ export const ProjectShortInfo = ({ star, position }: Props) => {
           {star.topics?.join(', ')}
         </Typography>
       </Grid> */}
-    </Grid>
-  )
-}
+      </Grid>
+    )
+  }
+)

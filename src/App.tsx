@@ -15,7 +15,7 @@ function App() {
   }, [dispatch])
 
   return (
-    <div className="App">
+    <div>
       <Galaxy />
       <Overlay />
     </div>

@@ -136,7 +136,6 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
     const loop = () => {
       composer.render()
       controls.update()
-      // camera.near = c / 0.1
       camera.updateProjectionMatrix()
       handlers.forEach(({ handler }) => handler())
 

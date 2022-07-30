@@ -7,7 +7,7 @@ import {
   TextureLoader,
 } from 'three'
 
-const COUNT = 5000
+const COUNT = 10000
 
 export function generatePointsCloud() {
   const geometry = new BufferGeometry()
@@ -32,7 +32,7 @@ export function generatePointsCloud() {
 
   const material = new PointsMaterial({
     color: 'white',
-    size: 0.0015,
+    size: 0.003,
     depthWrite: false,
     sizeAttenuation: true,
     blending: AdditiveBlending,
