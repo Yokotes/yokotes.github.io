@@ -1,5 +1,8 @@
 import { Grid, makeStyles } from '@material-ui/core'
 import React from 'react'
+import { BackToGalaxyButton } from './BackToGalaxyButton'
+import { LabelsContainer } from './LabelsContainer'
+import { ProjectInfoDrawer } from './ProjectInfoDrawer'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -13,5 +16,11 @@ const useStyles = makeStyles((theme) => ({
 
 export const Overlay = () => {
   const classes = useStyles()
-  return <Grid className={classes.container}>{/* <ProjectShortInfo /> */}</Grid>
+  return (
+    <Grid className={classes.container}>
+      <LabelsContainer />
+      <ProjectInfoDrawer />
+      <BackToGalaxyButton />
+    </Grid>
+  )
 }

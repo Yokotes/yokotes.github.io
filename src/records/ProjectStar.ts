@@ -8,6 +8,7 @@ const defaultValue = {
   topics: [] as string[],
   isPortfolio: false,
   isRendered: false,
+  isProfile: false,
 }
 
 export type ProjectStarParams = Partial<

@@ -12,6 +12,13 @@ function App() {
   useEffect(() => {
     // dispatch(projectStarDataFetchAction.request())
     dispatch(projectStarDataAddItemAction({ name: 'test', isPortfolio: true }))
+    dispatch(
+      projectStarDataAddItemAction({
+        name: 'My Profile',
+        isPortfolio: true,
+        isProfile: true,
+      })
+    )
   }, [dispatch])
 
   return (

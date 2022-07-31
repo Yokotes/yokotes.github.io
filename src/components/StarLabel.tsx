@@ -1,5 +1,6 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core'
 import React, { RefObject } from 'react'
+import ReactDOM from 'react-dom'
 import { ProjectStarRecord } from '../records'
 
 const useStyles = makeStyles((theme) => ({
@@ -39,28 +40,27 @@ interface Props {
   onClick: () => void
 }
 
-export const ProjectShortInfo = React.forwardRef(
-  ({ star, onClick }: Props, ref) => {
-    const classes = useStyles()
+export const StarLabel = React.forwardRef(({ star, onClick }: Props, ref) => {
+  const classes = useStyles()
 
-    return (
-      <Grid
-        container
-        direction="column"
-        spacing={2}
-        className={classes.shortInfo}
-        ref={ref as RefObject<HTMLDivElement>}
-        onClick={onClick}
-      >
-        <Grid item>
-          {/* <Typography variant="body1" className={classes.title}>
+  return ReactDOM.createPortal(
+    <Grid
+      container
+      direction="column"
+      spacing={2}
+      className={classes.shortInfo}
+      ref={ref as RefObject<HTMLDivElement>}
+      onClick={onClick}
+    >
+      <Grid item>
+        {/* <Typography variant="body1" className={classes.title}>
           Name
         </Typography> */}
-          <Typography variant="body1" className={classes.content}>
-            {star.name}
-          </Typography>
-        </Grid>
-        {/* <Grid item>
+        <Typography variant="body1" className={classes.content}>
+          {star.name}
+        </Typography>
+      </Grid>
+      {/* <Grid item>
         <Typography variant="body1" className={classes.title}>
           Topics
         </Typography>
@@ -68,7 +68,7 @@ export const ProjectShortInfo = React.forwardRef(
           {star.topics?.join(', ')}
         </Typography>
       </Grid> */}
-      </Grid>
-    )
-  }
-)
+    </Grid>,
+    document.querySelector('#star-labels-container') as Element
+  )
+})

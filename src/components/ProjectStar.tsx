@@ -1,7 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { Mesh, Vector3 } from 'three'
-import { projectStarDataSetItemIsRendered } from '../actions'
+import {
+  projectStarDataSetCurrentItemAction,
+  projectStarDataSetItemIsRendered,
+} from '../actions'
 import { PARAMETERS, PROJECT_STAR_MODEL } from '../constants'
 import { useCoreContext } from '../contexts'
 import {
@@ -10,8 +13,7 @@ import {
   zoomAt,
 } from '../helpers'
 import { ProjectStarRecord } from '../records'
-import { ProjectShortInfo } from './ProjectShortInfo'
-import TWEEN from '@tweenjs/tween.js'
+import { StarLabel } from './StarLabel'
 
 const { SPIN, BRANCHES, RADIUS } = PARAMETERS
 
@@ -23,20 +25,13 @@ interface Props {
 export const ProjectStar = ({ onRender, star }: Props) => {
   const { camera, scene, useRenderLoop, controls } = useCoreContext()
   const model = useMemo(() => PROJECT_STAR_MODEL.clone(true), [])
-  // const [position, setPosition] = useState<Vector3>()
   const labelRef = useRef<HTMLDivElement>(null)
   const dispatch = useDispatch()
 
   const handleLabelClick = () => {
-    const { x, y, z } = model.position
-    // controls.target.set(x, y, z)
-    // camera.zoom = 5
-    // camera.updateMatrix()
-    console.log(x, y, z)
-    zoomAt(model, camera, controls)
-    // scene.scale.multiplyScalar(5)
-    // controls.z
-    // console.log(controls.zoomIn(123))
+    // TODO: Pass whole record
+    dispatch(projectStarDataSetCurrentItemAction(star.id))
+    zoomAt(model.position, camera, controls)
   }
 
   // Render star in galaxy
@@ -48,14 +43,25 @@ export const ProjectStar = ({ onRender, star }: Props) => {
       dispatch(
         projectStarDataSetItemIsRendered({ id: star.id, isRendered: true })
       )
-      model.position.set(x, 0, z)
+
+      if (star.isProfile) model.position.set(0, 0, 0)
+      else model.position.set(x, 0, z)
     }
     const cloud = generatePointsCloud()
     cloud.scale.set(0.05, 0.05, 0.05)
 
     model.add(cloud)
     scene.add(model)
-  }, [camera, dispatch, model, onRender, scene, star.id, star.isRendered])
+  }, [
+    camera,
+    dispatch,
+    model,
+    onRender,
+    scene,
+    star.id,
+    star.isProfile,
+    star.isRendered,
+  ])
 
   // Update label position
   useRenderLoop(
@@ -80,7 +86,7 @@ export const ProjectStar = ({ onRender, star }: Props) => {
 
   return (
     <>
-      <ProjectShortInfo star={star} ref={labelRef} onClick={handleLabelClick} />
+      <StarLabel star={star} ref={labelRef} onClick={handleLabelClick} />
     </>
   )
 }
