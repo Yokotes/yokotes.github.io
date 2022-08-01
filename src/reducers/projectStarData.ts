@@ -17,6 +17,7 @@ export const projectStarData = (state = initialState, actions: AppActions) => {
       name: rawData.name,
       url: rawData.html_url,
       topics: rawData.topics,
+      description: rawData.description,
       isPortfolio: rawData.topics.includes('portfolio'),
     })) as ProjectStarParams[]
 

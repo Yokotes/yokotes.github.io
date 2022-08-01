@@ -18,9 +18,9 @@ export function generatePointsCloud() {
   const colors = new Float32Array(COUNT * 3)
 
   for (let i = 0; i < COUNT; i++) {
-    positions[i * 3] = Math.random() * 15 - 10
-    positions[i * 3 + 1] = Math.random() * 15 - 10
-    positions[i * 3 + 2] = Math.random() * 15 - 10
+    positions[i * 3] = Math.random() * 10 - 5
+    positions[i * 3 + 1] = Math.random() * 10 - 5
+    positions[i * 3 + 2] = Math.random() * 10 - 5
 
     colors[i * 3 + 0] = 256
     colors[i * 3 + 1] = 256
@@ -32,7 +32,7 @@ export function generatePointsCloud() {
 
   const material = new PointsMaterial({
     color: 'white',
-    size: 0.003,
+    size: 0.001,
     depthWrite: false,
     sizeAttenuation: true,
     blending: AdditiveBlending,

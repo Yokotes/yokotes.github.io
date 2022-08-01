@@ -5,12 +5,13 @@ import {
   projectStarDataSetCurrentItemAction,
   projectStarDataSetItemIsRendered,
 } from '../actions'
-import { PARAMETERS, PROJECT_STAR_MODEL } from '../constants'
+import { PARAMETERS } from '../constants'
 import { useCoreContext } from '../contexts'
 import {
   getRandomProjectStarPosition,
   generatePointsCloud,
   zoomAt,
+  generateProjectStarModel,
 } from '../helpers'
 import { ProjectStarRecord } from '../records'
 import { StarLabel } from './StarLabel'
@@ -24,7 +25,7 @@ interface Props {
 
 export const ProjectStar = ({ onRender, star }: Props) => {
   const { camera, scene, useRenderLoop, controls } = useCoreContext()
-  const model = useMemo(() => PROJECT_STAR_MODEL.clone(true), [])
+  const model = useMemo(() => generateProjectStarModel(), [])
   const labelRef = useRef<HTMLDivElement>(null)
   const dispatch = useDispatch()
 

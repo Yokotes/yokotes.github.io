@@ -61,7 +61,6 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
     [renderer, camera]
   )
   controls.enableDamping = true
-  // controls.enableZoom = false
 
   const useRenderLoop = (handler: Handler, name: string, deps: any[] = []) => {
     useEffect(() => {

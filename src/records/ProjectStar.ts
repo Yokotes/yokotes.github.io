@@ -5,6 +5,7 @@ const defaultValue = {
   id: '',
   name: '',
   url: '',
+  description: '',
   topics: [] as string[],
   isPortfolio: false,
   isRendered: false,

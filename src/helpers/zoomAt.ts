@@ -8,6 +8,7 @@ export const zoomAt = (
   orbitControls: OrbitControls
 ) => {
   //now use gsap and not tweenjs.. never use tweenjs again. never.
+  orbitControls.enabled = false // activate the controler again after animation
 
   gsap.to(orbitControls.target, {
     duration: 0.5,
@@ -16,16 +17,18 @@ export const zoomAt = (
     y: coords.y, //set the center of the controler to the zoomed object
     z: coords.z, // no distance needed
     onComplete: () => {
-      orbitControls.enabled = true // activate the controler again after animation
-
       gsap.to(camera.position, {
         duration: 3,
         x: coords.x,
         y: coords.y, // place camera a bit higher than the object
-        z: coords.z + 0.0005, // maybe adding even more offset depending on your model
+        z: coords.z + 0.00035, // maybe adding even more offset depending on your model
         onUpdate: function () {
           camera.lookAt(coords) //important
           // orbitControls.target = target.position
+        },
+
+        onComplete: () => {
+          orbitControls.enabled = true // activate the controler again after animation
         },
       })
     },
@@ -33,6 +36,8 @@ export const zoomAt = (
 }
 
 export const backToGalaxy = (camera: Camera, orbitControls: OrbitControls) => {
+  orbitControls.enabled = false // activate the controler again after animation
+
   gsap.to(camera.position, {
     duration: 3,
     x: 4,
