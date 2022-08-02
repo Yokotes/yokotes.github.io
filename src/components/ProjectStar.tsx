@@ -1,6 +1,13 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
-import { Mesh, Vector3 } from 'three'
+import {
+  Mesh,
+  Raycaster,
+  Vector3,
+  BoxBufferGeometry,
+  Box3,
+  MeshBasicMaterial,
+} from 'three'
 import {
   projectStarDataSetCurrentItemAction,
   projectStarDataSetItemIsRendered,
@@ -24,8 +31,33 @@ interface Props {
 }
 
 export const ProjectStar = ({ onRender, star }: Props) => {
-  const { camera, scene, useRenderLoop, controls } = useCoreContext()
+  const { camera, scene, useRenderLoop, controls, pointClouds } =
+    useCoreContext()
+  const raycaster = useMemo(() => new Raycaster(), [])
   const model = useMemo(() => generateProjectStarModel(), [])
+  const cloud = useMemo(() => generatePointsCloud(), [])
+  cloud.scale.set(0.05, 0.05, 0.05)
+
+  const box = useMemo(() => new Box3().setFromObject(cloud), [cloud])
+  const bodySize = useMemo(() => new Vector3(), [])
+  box.getSize(bodySize)
+  const bodyGeometry = useMemo(
+    () => new BoxBufferGeometry(bodySize.x * 3, bodySize.y, bodySize.z),
+    [bodySize]
+  )
+  const bodyMaterial = useMemo(
+    () =>
+      new MeshBasicMaterial({
+        transparent: true,
+        opacity: 0,
+        // color: 'red',
+      }),
+    []
+  )
+  const body = useMemo(
+    () => new Mesh(bodyGeometry, bodyMaterial),
+    [bodyGeometry, bodyMaterial]
+  )
   const labelRef = useRef<HTMLDivElement>(null)
   const dispatch = useDispatch()
 
@@ -45,19 +77,22 @@ export const ProjectStar = ({ onRender, star }: Props) => {
         projectStarDataSetItemIsRendered({ id: star.id, isRendered: true })
       )
 
-      if (star.isProfile) model.position.set(0, 0, 0)
-      else model.position.set(x, 0, z)
-    }
-    const cloud = generatePointsCloud()
-    cloud.scale.set(0.05, 0.05, 0.05)
+      model.position.set(x, 0, z)
+      body.position.set(x, 0, z)
 
-    model.add(cloud)
+      pointClouds.add(body)
+      model.add(cloud)
+    }
+
     scene.add(model)
   }, [
+    body,
     camera,
+    cloud,
     dispatch,
     model,
     onRender,
+    pointClouds,
     scene,
     star.id,
     star.isProfile,
@@ -67,6 +102,9 @@ export const ProjectStar = ({ onRender, star }: Props) => {
   // Update label position
   useRenderLoop(
     () => {
+      body.lookAt(camera.position)
+
+      // Check intersection & Move labels
       if (!labelRef.current) return
 
       const temp = new Vector3()
@@ -76,13 +114,33 @@ export const ProjectStar = ({ onRender, star }: Props) => {
 
       temp.project(camera)
 
+      raycaster.setFromCamera(temp, camera)
+      const intersections = raycaster.intersectObjects(pointClouds.children)
+
+      intersections[0]?.object.getWorldPosition(temp)
+      temp.project(camera)
+
+      let intersOffsetY = 0
+
+      if (intersections[0] && intersections[0].object.id !== body.id) {
+        const modelInters = intersections.find(
+          (inters) => inters.object.id === body.id
+        )
+
+        if (modelInters) {
+          intersOffsetY = intersections.indexOf(modelInters)
+        }
+      }
+
       const x = (temp.x * 0.5 + 0.5) * window.innerWidth
       const y = (temp.y * -0.5 + 0.5) * window.innerHeight
 
-      labelRef.current.style.transform = `translate(-50%, -50%) translate(${x}px,${y}px)`
+      labelRef.current.style.transform = `translate(-50%, -50%) translate(${x}px,${
+        y - 30 * (intersOffsetY >= 0 ? intersOffsetY : 0)
+      }px)`
     },
     `${model.name}_label_update`,
-    [model, labelRef]
+    [model, labelRef, raycaster, body, camera]
   )
 
   return (

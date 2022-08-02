@@ -11,7 +11,9 @@ function App() {
 
   useEffect(() => {
     dispatch(projectStarDataFetchAction.request())
-    // dispatch(projectStarDataAddItemAction({ name: 'test', isPortfolio: true }))
+    // dispatch(projectStarDataAddItemAction({ name: 'One', isPortfolio: true }))
+    // dispatch(projectStarDataAddItemAction({ name: 'Two', isPortfolio: true }))
+
     // dispatch(
     //   projectStarDataAddItemAction({
     //     name: 'My Profile',

@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import {
   AmbientLight,
+  Group,
   PerspectiveCamera,
   Scene,
   Vector2,
@@ -20,6 +21,7 @@ interface Values {
   camera: PerspectiveCamera
   useRenderLoop: (handler: Handler, name: string, deps?: any[]) => void
   controls: OrbitControls
+  pointClouds: Group
 }
 
 type Handler = () => void
@@ -51,6 +53,7 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
       ),
     []
   )
+  const pointClouds = useMemo(() => new Group(), [])
   // const shaderPass = useMemo(() => new ShaderPass(Shader), [])
   const renderPass = useMemo(
     () => new RenderPass(scene, camera),
@@ -91,8 +94,10 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
     camera.position.x = 4
     camera.position.y = 4
     camera.position.z = 4
+
     scene.add(camera)
     scene.add(light)
+    scene.add(pointClouds)
 
     renderer.setSize(window.innerWidth, window.innerHeight)
     composer.setSize(window.innerWidth, window.innerHeight)
@@ -107,7 +112,6 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
         0
       )
     )
-
     window.addEventListener('resize', () => {
       // Update camera
       camera.aspect = window.innerWidth / window.innerHeight
@@ -127,7 +131,7 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
         composer.setSize(window.innerWidth, window.innerHeight)
       })
     }
-  }, [renderer, scene, camera, composer, renderPass])
+  }, [renderer, scene, camera, composer, renderPass, pointClouds])
 
   useEffect(() => {
     let loopId = 0
@@ -150,7 +154,7 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <CoreContext.Provider
-      value={{ renderer, scene, camera, useRenderLoop, controls }}
+      value={{ renderer, scene, camera, useRenderLoop, controls, pointClouds }}
     >
       {children}
     </CoreContext.Provider>
