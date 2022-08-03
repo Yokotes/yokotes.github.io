@@ -39,7 +39,8 @@ export const Galaxy = () => {
 
   useEffect(() => {
     scene.add(points)
-
+    // points.layers.enable(1)
+    points.layers.enable(1)
     return () => {
       scene.remove(points)
     }

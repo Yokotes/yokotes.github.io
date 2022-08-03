@@ -20,13 +20,19 @@ const useStyles = makeStyles((theme) => ({
      0    1px 0 #000,
     -1px  1px 0 #000,
     -1px  0   0 #000`,
+
+    '&:hover': {
+      opacity: '1 !important',
+    },
   },
 
   content: {
     fontSize: '1.5rem',
-    // textDecoration: 'underline',
+    transition: 'transform 0.5s',
 
-    // color: 'rgb(240, 240, 240)',
+    '&:hover': {
+      transform: 'scale(1.5)',
+    },
   },
 
   title: {

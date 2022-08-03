@@ -4,7 +4,7 @@ import {
   projectStarDataAddItemAction,
   projectStarDataFetchAction,
 } from './actions'
-import { Galaxy, Overlay } from './components'
+import { Galaxy, Overlay, UFO } from './components'
 
 function App() {
   const dispatch = useDispatch()
@@ -27,6 +27,7 @@ function App() {
     <div>
       <Galaxy />
       <Overlay />
+      <UFO />
     </div>
   )
 }
