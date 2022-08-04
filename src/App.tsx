@@ -4,14 +4,14 @@ import {
   projectStarDataAddItemAction,
   projectStarDataFetchAction,
 } from './actions'
-import { Galaxy, Overlay, UFO } from './components'
+import { Galaxy, Overlay } from './components'
 
 function App() {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(projectStarDataFetchAction.request())
-    // dispatch(projectStarDataAddItemAction({ name: 'One', isPortfolio: true }))
+    // dispatch(projectStarDataFetchAction.request())
+    dispatch(projectStarDataAddItemAction({ name: 'One', isPortfolio: true }))
     // dispatch(projectStarDataAddItemAction({ name: 'Two', isPortfolio: true }))
 
     // dispatch(
@@ -27,7 +27,6 @@ function App() {
     <div>
       <Galaxy />
       <Overlay />
-      <UFO />
     </div>
   )
 }

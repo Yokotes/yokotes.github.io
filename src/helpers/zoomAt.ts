@@ -44,18 +44,7 @@ export const backToGalaxy = (camera: Camera, orbitControls: OrbitControls) => {
     y: 4, // place camera a bit higher than the object
     z: 4, // maybe adding even more offset depending on your model
     onComplete: function () {
-      // orbitControls.target = target.position
-      gsap.to(orbitControls.target, {
-        duration: 0.5,
-
-        x: 0,
-        y: 0, //set the center of the controler to the zoomed object
-        z: 0, // no distance needed
-        onComplete: () => {
-          camera.lookAt(new Vector3(0, 0, 0)) //important
-          orbitControls.enabled = true // activate the controler again after animation
-        },
-      })
+      orbitControls.enabled = true // activate the controler again after animation
     },
   })
 }

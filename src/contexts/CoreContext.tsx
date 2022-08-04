@@ -36,7 +36,7 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [handlers, setHandlers] = useState<HandlerConfig[]>([])
   const renderer = useMemo(
-    () => new WebGLRenderer({ logarithmicDepthBuffer: true }),
+    () => new WebGLRenderer({ logarithmicDepthBuffer: true, alpha: true }),
     []
   )
   const composer = useMemo(() => new EffectComposer(renderer), [renderer])
@@ -92,7 +92,6 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
     camera.position.x = 4
     camera.position.y = 4
     camera.position.z = 4
-    camera.layers.enable(1)
 
     scene.add(camera)
     scene.add(light)
@@ -109,7 +108,6 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
       0
     )
     composer.addPass(bloomPass)
-    bloomPass.renderToScreen = true
 
     window.addEventListener('resize', () => {
       // Update camera
@@ -136,15 +134,6 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
     let loopId = 0
 
     const loop = () => {
-      renderer.autoClear = false
-      renderer.clear()
-
-      camera.layers.set(0)
-      renderer.render(scene, camera)
-
-      renderer.clearDepth()
-
-      camera.layers.set(1)
       composer.render()
 
       controls.update()

@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { PointsMaterial, Points, Clock, Mesh } from 'three'
+import { PointsMaterial, Points, Clock } from 'three'
 
 import { useCoreContext } from '../contexts'
 import { generateGalaxy } from '../helpers'
@@ -25,22 +25,12 @@ export const Galaxy = () => {
   const clock = useMemo(() => new Clock(), [])
   const projectStars = useSelector(projectStarDataItemsSelector)
 
-  const handleProjectStarRender = useCallback(
-    (model: Mesh) => {
-      points.remove(model)
-      points.add(model)
-    },
-    [points]
-  )
-
   useEffect(() => {
     setPoints(generateGalaxy())
   }, [])
 
   useEffect(() => {
     scene.add(points)
-    // points.layers.enable(1)
-    points.layers.enable(1)
     return () => {
       scene.remove(points)
     }
@@ -63,11 +53,7 @@ export const Galaxy = () => {
         .toList()
         .toArray()
         .map((star) => (
-          <ProjectStar
-            key={star.id}
-            onRender={handleProjectStarRender}
-            star={star}
-          />
+          <ProjectStar key={star.id} star={star} />
         ))}
     </>
   )
