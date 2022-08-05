@@ -1,5 +1,6 @@
 import { ProjectStarParams } from './../records/ProjectStar'
 import { createAction, createAsyncAction } from 'typesafe-actions'
+import { ProjectStarRecord } from '../records'
 
 export const projectStarDataFillItemsAction = createAction(
   'project_star_data_fill_items'.toUpperCase(),
@@ -24,7 +25,7 @@ export const projectStarDataSetItemIsRendered = createAction(
 
 export const projectStarDataSetCurrentItemAction = createAction(
   'project_star_data_set_current_item'.toUpperCase(),
-  (payload: string) => payload
+  (payload: ProjectStarRecord | null) => payload
 )()
 
 export const projectStarDataClearCurrentItemAction = createAction(

@@ -16,7 +16,7 @@ import {
 import { ProjectStarRecord } from '../records'
 import { StarLabel } from './StarLabel'
 
-const { SPIN, BRANCHES, RADIUS } = PARAMETERS
+const { RADIUS } = PARAMETERS
 interface Props {
   star: ProjectStarRecord
 }
@@ -24,15 +24,14 @@ interface Props {
 export const ProjectStar = ({ star }: Props) => {
   const { camera, scene, useRenderLoop, controls } = useCoreContext()
   const raycaster = useMemo(() => new Raycaster(), [])
-  const model = useMemo(() => generateProjectStarModel(), [])
+  const [model, lensFlare] = useMemo(() => generateProjectStarModel(), [])
   const cloud = useMemo(() => generatePointsCloud(), [])
 
   const labelRef = useRef<HTMLDivElement>(null)
   const dispatch = useDispatch()
 
   const handleLabelClick = () => {
-    // TODO: Pass whole record
-    dispatch(projectStarDataSetCurrentItemAction(star.id))
+    dispatch(projectStarDataSetCurrentItemAction(star))
     zoomAt(model.position, camera, controls)
   }
 
@@ -40,7 +39,7 @@ export const ProjectStar = ({ star }: Props) => {
   useEffect(() => {
     if (!star.isRendered) {
       model.name = `project_star_${star.id}`
-      const { x, z } = getRandomProjectStarPosition(0.5, SPIN, BRANCHES, RADIUS)
+      const { x, z } = getRandomProjectStarPosition(RADIUS)
 
       dispatch(
         projectStarDataSetItemIsRendered({ id: star.id, isRendered: true })
@@ -57,6 +56,7 @@ export const ProjectStar = ({ star }: Props) => {
     camera,
     cloud,
     dispatch,
+    lensFlare,
     model,
     scene,
     star.id,
@@ -67,7 +67,13 @@ export const ProjectStar = ({ star }: Props) => {
   // Update label position
   useRenderLoop(
     () => {
-      model.rotation.y += 0.005
+      const distance = camera.position.distanceTo(model.position)
+
+      if (distance > 0.0004 && model.children.includes(lensFlare)) {
+        model.remove(lensFlare)
+      } else if (distance <= 0.0004 && !model.children.includes(lensFlare)) {
+        model.add(lensFlare)
+      }
 
       // Move label
       if (!labelRef.current) return

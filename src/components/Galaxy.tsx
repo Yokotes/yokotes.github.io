@@ -1,10 +1,10 @@
 import { makeStyles } from '@material-ui/core'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { PointsMaterial, Points, Clock } from 'three'
+import { PointsMaterial, Points } from 'three'
 
 import { useCoreContext } from '../contexts'
-import { generateGalaxy } from '../helpers'
+import { generateGalaxy, generatePointsCloud } from '../helpers'
 import { projectStarDataItemsSelector } from '../selectors'
 import { ProjectStar } from './ProjectStar'
 
@@ -22,7 +22,7 @@ export const Galaxy = () => {
   const classes = useStyles()
   const { scene, useRenderLoop, controls } = useCoreContext()
   const [points, setPoints] = useState<Points>(new Points())
-  const clock = useMemo(() => new Clock(), [])
+  const pointsCloud = useMemo(() => generatePointsCloud(0.7, 200), [])
   const projectStars = useSelector(projectStarDataItemsSelector)
 
   useEffect(() => {
@@ -30,11 +30,12 @@ export const Galaxy = () => {
   }, [])
 
   useEffect(() => {
+    points.add(pointsCloud)
     scene.add(points)
     return () => {
       scene.remove(points)
     }
-  }, [points, scene])
+  }, [points, pointsCloud, scene])
 
   useRenderLoop(
     () => {
@@ -43,7 +44,7 @@ export const Galaxy = () => {
       ;(points.material as PointsMaterial).opacity = normalizedValue
     },
     'galaxy',
-    [points, clock]
+    [points]
   )
 
   return (

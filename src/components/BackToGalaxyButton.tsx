@@ -38,8 +38,9 @@ export const BackToGalaxyButton = () => {
   const dispatch = useDispatch()
 
   const handleClick = () => {
-    backToGalaxy(camera, controls)
-    dispatch(projectStarDataSetCurrentItemAction(''))
+    backToGalaxy(camera, controls, () =>
+      dispatch(projectStarDataSetCurrentItemAction(null))
+    )
   }
 
   return (

@@ -51,7 +51,6 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
       ),
     []
   )
-
   const renderPass = useMemo(
     () => new RenderPass(scene, camera),
     [camera, scene]
@@ -61,6 +60,7 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
     [renderer, camera]
   )
   controls.enableDamping = true
+  controls.enableZoom = false
 
   const useRenderLoop = (handler: Handler, name: string, deps: any[] = []) => {
     useEffect(() => {
@@ -87,7 +87,6 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
     container?.append(renderer.domElement)
 
     const light = new AmbientLight()
-    // light.intensity = 12
 
     camera.position.x = 4
     camera.position.y = 4

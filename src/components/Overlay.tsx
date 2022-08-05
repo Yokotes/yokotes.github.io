@@ -2,6 +2,7 @@ import { Grid, makeStyles } from '@material-ui/core'
 import React from 'react'
 import { BackToGalaxyButton } from './BackToGalaxyButton'
 import { LabelsContainer } from './LabelsContainer'
+import { LinksContainer } from './LinksContainer'
 import { ProjectInfoDrawer } from './ProjectInfoDrawer'
 
 const useStyles = makeStyles((theme) => ({
@@ -21,6 +22,7 @@ export const Overlay = () => {
       <LabelsContainer />
       <ProjectInfoDrawer />
       <BackToGalaxyButton />
+      <LinksContainer />
     </Grid>
   )
 }

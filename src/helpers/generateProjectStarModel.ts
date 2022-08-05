@@ -12,12 +12,12 @@ import {
 } from 'three/examples/jsm/objects/Lensflare'
 
 const { COUNT } = PARAMETERS
-const COLORS = ['#F0DA43', '#E65A40', '#4843F0']
+const COLORS = ['#F0DA43', '#E65A40', 'orange']
 
 export const generateProjectStarModel = () => {
   const bgGeometry = new SphereBufferGeometry(0.0001)
   const textureLoader = new TextureLoader()
-  const starTexture = textureLoader.load('/images/graySun.jpg')
+  const starTexture = textureLoader.load('/images/sunSurfaceMaterial.jpg')
   const color = COLORS[Math.round(Math.random() * 2)]
 
   const bgMaterial = new MeshLambertMaterial({
@@ -30,18 +30,14 @@ export const generateProjectStarModel = () => {
 
   const projectStarModel = new Mesh(bgGeometry, bgMaterial)
   const lensFlare = new Lensflare()
-  const hexangle = textureLoader.load('/images/hexangle.png')
-  const lensflareTexture = textureLoader.load('/images/lensflare0.png')
+  const lensflareTexture = textureLoader.load('/images/lensflare.png')
 
   lensFlare.addElement(
-    new LensflareElement(lensflareTexture, 1000, 0, new Color(color))
+    new LensflareElement(lensflareTexture, 800, 0, new Color(color))
   )
-  // lensFlare.addElement(new LensflareElement(hexangle, 100, 0.5))
-
-  // projectStarModel.add(lensFlare)
 
   projectStarModel.renderOrder = COUNT + 1
-  lensFlare.renderOrder = COUNT
+  lensFlare.renderOrder = COUNT - 1
 
-  return projectStarModel
+  return [projectStarModel, lensFlare]
 }

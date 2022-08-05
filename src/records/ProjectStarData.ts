@@ -41,8 +41,8 @@ export class ProjectStarDataRecord extends Record(defaultValue) {
     )
   }
 
-  public setCurrentStar(id: string) {
-    return this.set('currentStar', this.items.get(id) as ProjectStarRecord)
+  public setCurrentStar(item: ProjectStarRecord | null) {
+    return this.set('currentStar', item)
   }
 
   public clearCurrentStar() {

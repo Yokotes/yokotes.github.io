@@ -10,8 +10,8 @@ function App() {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    // dispatch(projectStarDataFetchAction.request())
-    dispatch(projectStarDataAddItemAction({ name: 'One', isPortfolio: true }))
+    dispatch(projectStarDataFetchAction.request())
+    // dispatch(projectStarDataAddItemAction({ name: 'One', isPortfolio: true }))
     // dispatch(projectStarDataAddItemAction({ name: 'Two', isPortfolio: true }))
 
     // dispatch(

@@ -18,7 +18,7 @@ export const zoomAt = (
     z: coords.z, // no distance needed
     onComplete: () => {
       gsap.to(camera.position, {
-        duration: 3,
+        duration: 5,
         x: coords.x,
         y: coords.y, // place camera a bit higher than the object
         z: coords.z + 0.00035, // maybe adding even more offset depending on your model
@@ -35,16 +35,31 @@ export const zoomAt = (
   })
 }
 
-export const backToGalaxy = (camera: Camera, orbitControls: OrbitControls) => {
+export const backToGalaxy = (
+  camera: Camera,
+  orbitControls: OrbitControls,
+  callback?: () => void
+) => {
   orbitControls.enabled = false // activate the controler again after animation
 
   gsap.to(camera.position, {
-    duration: 3,
+    duration: 5,
     x: 4,
     y: 4, // place camera a bit higher than the object
     z: 4, // maybe adding even more offset depending on your model
     onComplete: function () {
-      orbitControls.enabled = true // activate the controler again after animation
+      // orbitControls.target = target.position
+      gsap.to(orbitControls.target, {
+        duration: 0.5,
+        x: 0,
+        y: 0, //set the center of the controler to the zoomed object
+        z: 0, // no distance needed
+        onComplete: () => {
+          camera.lookAt(new Vector3(0, 0, 0)) //important
+          orbitControls.enabled = true // activate the controler again after animation
+          callback?.()
+        },
+      })
     },
   })
 }
