@@ -8,7 +8,7 @@ export const projectStarDataFetchEpic: AppEpic = (action$) =>
     filter(isActionOf(projectStarDataFetchAction.request)),
     mergeMap(() =>
       from(
-        fetch('https://api.github.com/users/yokotes/repos', {
+        fetch(process.env.REACT_APP_REPOS_URL as string, {
           headers: {
             Authorization: `token ${process.env.REACT_APP_GITHUB_TOKEN}`,
           },

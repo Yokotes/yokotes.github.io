@@ -7,28 +7,25 @@ export const zoomAt = (
   camera: Camera,
   orbitControls: OrbitControls
 ) => {
-  //now use gsap and not tweenjs.. never use tweenjs again. never.
-  orbitControls.enabled = false // activate the controler again after animation
+  orbitControls.enabled = false
 
   gsap.to(orbitControls.target, {
     duration: 0.5,
-
     x: coords.x,
-    y: coords.y, //set the center of the controler to the zoomed object
-    z: coords.z, // no distance needed
+    y: coords.y,
+    z: coords.z,
     onComplete: () => {
       gsap.to(camera.position, {
-        duration: 5,
+        duration: 4,
         x: coords.x,
-        y: coords.y, // place camera a bit higher than the object
-        z: coords.z + 0.00035, // maybe adding even more offset depending on your model
+        y: coords.y,
+        z: coords.z + 0.00035,
         onUpdate: function () {
-          camera.lookAt(coords) //important
-          // orbitControls.target = target.position
+          camera.lookAt(coords)
         },
 
         onComplete: () => {
-          orbitControls.enabled = true // activate the controler again after animation
+          orbitControls.enabled = true
         },
       })
     },
@@ -40,23 +37,22 @@ export const backToGalaxy = (
   orbitControls: OrbitControls,
   callback?: () => void
 ) => {
-  orbitControls.enabled = false // activate the controler again after animation
+  orbitControls.enabled = false
 
   gsap.to(camera.position, {
-    duration: 5,
+    duration: 4,
     x: 4,
-    y: 4, // place camera a bit higher than the object
-    z: 4, // maybe adding even more offset depending on your model
+    y: 4,
+    z: 4,
     onComplete: function () {
-      // orbitControls.target = target.position
       gsap.to(orbitControls.target, {
         duration: 0.5,
         x: 0,
-        y: 0, //set the center of the controler to the zoomed object
-        z: 0, // no distance needed
+        y: 0,
+        z: 0,
         onComplete: () => {
-          camera.lookAt(new Vector3(0, 0, 0)) //important
-          orbitControls.enabled = true // activate the controler again after animation
+          camera.lookAt(new Vector3(0, 0, 0))
+          orbitControls.enabled = true
           callback?.()
         },
       })

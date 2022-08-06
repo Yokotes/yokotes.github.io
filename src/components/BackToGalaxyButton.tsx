@@ -1,5 +1,5 @@
 import { Button, makeStyles, Theme } from '@material-ui/core'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { projectStarDataSetCurrentItemAction } from '../actions'
 import { useCoreContext } from '../contexts'
@@ -37,11 +37,11 @@ export const BackToGalaxyButton = () => {
   const classes = useStyles({ show: !!currentStar })
   const dispatch = useDispatch()
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     backToGalaxy(camera, controls, () =>
       dispatch(projectStarDataSetCurrentItemAction(null))
     )
-  }
+  }, [camera, controls, dispatch])
 
   return (
     <Button variant="text" className={classes.button} onClick={handleClick}>

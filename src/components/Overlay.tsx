@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const Overlay = () => {
   const classes = useStyles()
+
   return (
     <Grid className={classes.container}>
       <LabelsContainer />

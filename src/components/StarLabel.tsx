@@ -3,7 +3,7 @@ import React, { RefObject } from 'react'
 import ReactDOM from 'react-dom'
 import { ProjectStarRecord } from '../records'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   shortInfo: {
     position: 'absolute',
     top: 0,
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '1.1rem',
     textDecoration: 'underline',
   },
-}))
+})
 
 interface Props {
   star: ProjectStarRecord
@@ -59,21 +59,10 @@ export const StarLabel = React.forwardRef(({ star, onClick }: Props, ref) => {
       onClick={onClick}
     >
       <Grid item>
-        {/* <Typography variant="body1" className={classes.title}>
-          Name
-        </Typography> */}
         <Typography variant="body1" className={classes.content}>
           {star.name}
         </Typography>
       </Grid>
-      {/* <Grid item>
-        <Typography variant="body1" className={classes.title}>
-          Topics
-        </Typography>
-        <Typography variant="body2" className={classes.content}>
-          {star.topics?.join(', ')}
-        </Typography>
-      </Grid> */}
     </Grid>,
     document.querySelector('#star-labels-container') as Element
   )

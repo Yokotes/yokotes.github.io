@@ -1,9 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import {
-  projectStarDataAddItemAction,
-  projectStarDataFetchAction,
-} from './actions'
+import { projectStarDataFetchAction } from './actions'
 import { Galaxy, Overlay } from './components'
 
 function App() {
@@ -11,16 +8,6 @@ function App() {
 
   useEffect(() => {
     dispatch(projectStarDataFetchAction.request())
-    // dispatch(projectStarDataAddItemAction({ name: 'One', isPortfolio: true }))
-    // dispatch(projectStarDataAddItemAction({ name: 'Two', isPortfolio: true }))
-
-    // dispatch(
-    //   projectStarDataAddItemAction({
-    //     name: 'My Profile',
-    //     isPortfolio: true,
-    //     isProfile: true,
-    //   })
-    // )
   }, [dispatch])
 
   return (

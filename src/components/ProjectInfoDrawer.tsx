@@ -1,18 +1,16 @@
 import { Drawer, Grid, Link, makeStyles, Typography } from '@material-ui/core'
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { projectStarDataCurrentItemSelector } from '../selectors'
+import { ProjectStarName } from './ProjectStarName'
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
     backgroundColor: 'rgba(30, 30, 30, 0.75)',
     color: 'white',
     padding: theme.spacing(4, 4, 2),
-    pointerEvents: 'all',
-    width: 500,
-  },
-  backdrop: {
-    pointerEvents: 'none',
+    pointerEvents: 'auto',
+    maxWidth: 500,
   },
   title: {
     fontSize: '2rem',
@@ -42,43 +40,62 @@ const useStyles = makeStyles((theme) => ({
 
 export const ProjectInfoDrawer = () => {
   const currentStar = useSelector(projectStarDataCurrentItemSelector)
+  const [isOpen, setIsOpen] = useState(true)
   const classes = useStyles()
 
-  return (
-    <Drawer
-      anchor="left"
-      open={!!currentStar}
-      classes={{ paper: classes.drawer, modal: classes.backdrop }}
-      hideBackdrop
-    >
-      <Typography variant="h1" className={classes.title}>
-        {currentStar?.name}
-      </Typography>
-      <Typography variant="h2" className={classes.subtitle}>
-        Description
-      </Typography>
-      <Typography variant="body2" className={classes.text}>
-        {currentStar?.description}
-      </Typography>
-      <Typography variant="h2" className={classes.subtitle}>
-        Topics
-      </Typography>
-      <Typography variant="body2" className={classes.text}>
-        {currentStar?.topics.join(', ')}
-      </Typography>
+  const toggleDrawer = useCallback(() => {
+    setIsOpen((prev) => !prev)
+  }, [])
 
-      <Grid container>
-        <Grid item>
-          <Link
-            href={currentStar?.url}
-            target="_blank"
-            variant="body1"
-            className={classes.link}
-          >
-            Open project
-          </Link>
+  useEffect(() => {
+    setIsOpen(true)
+  }, [currentStar])
+
+  return (
+    <>
+      <Drawer
+        anchor="left"
+        open={!!currentStar && isOpen}
+        classes={{ paper: classes.drawer }}
+        onClose={toggleDrawer}
+        BackdropProps={{
+          style: { opacity: 0 },
+        }}
+      >
+        <Typography variant="h1" className={classes.title}>
+          {currentStar?.name}
+        </Typography>
+        <Typography variant="h2" className={classes.subtitle}>
+          Description
+        </Typography>
+        <Typography variant="body2" className={classes.text}>
+          {currentStar?.description}
+        </Typography>
+        <Typography variant="h2" className={classes.subtitle}>
+          Topics
+        </Typography>
+        <Typography variant="body2" className={classes.text}>
+          {currentStar?.topics.join(', ')}
+        </Typography>
+
+        <Grid container>
+          <Grid item>
+            <Link
+              href={currentStar?.url}
+              target="_blank"
+              variant="body1"
+              className={classes.link}
+            >
+              Open project
+            </Link>
+          </Grid>
         </Grid>
-      </Grid>
-    </Drawer>
+      </Drawer>
+      <ProjectStarName
+        name={currentStar?.name}
+        hidden={isOpen}
+        onClick={toggleDrawer}
+      />
+    </>
   )
 }

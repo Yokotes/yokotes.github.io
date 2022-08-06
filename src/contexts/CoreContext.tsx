@@ -59,8 +59,6 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
     () => new OrbitControls(camera, renderer.domElement),
     [renderer, camera]
   )
-  controls.enableDamping = true
-  controls.enableZoom = false
 
   const useRenderLoop = (handler: Handler, name: string, deps: any[] = []) => {
     useEffect(() => {
@@ -82,6 +80,7 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
     }, deps)
   }
 
+  // Setup canvas
   useEffect(() => {
     const container = document.querySelector('#scene-container')
     container?.append(renderer.domElement)
@@ -94,6 +93,9 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
     scene.add(camera)
     scene.add(light)
+
+    controls.enableDamping = true
+    controls.enableZoom = false
 
     renderer.setSize(window.innerWidth, window.innerHeight)
     composer.setSize(window.innerWidth, window.innerHeight)
@@ -127,7 +129,7 @@ export const CoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
         composer.setSize(window.innerWidth, window.innerHeight)
       })
     }
-  }, [renderer, scene, camera, composer, renderPass])
+  }, [renderer, scene, camera, composer, renderPass, controls])
 
   useEffect(() => {
     let loopId = 0

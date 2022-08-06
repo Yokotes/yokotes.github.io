@@ -3,7 +3,6 @@ import { ProjectStarParams, ProjectStarRecord } from './ProjectStar'
 
 const defaultValue = {
   items: Map<string, ProjectStarRecord>(),
-  isAllDisplayed: false,
   currentStar: null as ProjectStarRecord | null,
 }
 
@@ -47,9 +46,5 @@ export class ProjectStarDataRecord extends Record(defaultValue) {
 
   public clearCurrentStar() {
     return this.set('currentStar', null)
-  }
-
-  public setIsAllDisplayed(val: boolean) {
-    return this.set('isAllDisplayed', val)
   }
 }

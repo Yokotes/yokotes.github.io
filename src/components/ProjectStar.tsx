@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { Raycaster, Vector3 } from 'three'
 import {
@@ -30,10 +30,10 @@ export const ProjectStar = ({ star }: Props) => {
   const labelRef = useRef<HTMLDivElement>(null)
   const dispatch = useDispatch()
 
-  const handleLabelClick = () => {
+  const handleLabelClick = useCallback(() => {
     dispatch(projectStarDataSetCurrentItemAction(star))
     zoomAt(model.position, camera, controls)
-  }
+  }, [camera, controls, dispatch, model.position, star])
 
   // Render star in galaxy
   useEffect(() => {

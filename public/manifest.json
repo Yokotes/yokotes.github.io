@@ -1,25 +1,44 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Viktor Borzov Portfolio",
+  "name": "Viktor Borzov Portfolio Website",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "src": "favicon_light.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon",
+      "color_scheme": "light"
     },
     {
-      "src": "logo192.png",
-      "type": "image/png",
-      "sizes": "192x192"
+      "src": "favicon_dark.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon",
+      "color_scheme": "dark"
     },
     {
-      "src": "logo512.png",
+      "src": "light192.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "192x192",
+      "color_scheme": "light"
+    },
+    {
+      "src": "light512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "color_scheme": "light"
+    },
+    {
+      "src": "dark192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "color_scheme": "dark"
+    },
+    {
+      "src": "dark512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "color_scheme": "dark"
     }
   ],
   "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "display": "standalone"
 }

@@ -24,6 +24,10 @@ export const Galaxy = () => {
   const [points, setPoints] = useState<Points>(new Points())
   const pointsCloud = useMemo(() => generatePointsCloud(0.7, 200), [])
   const projectStars = useSelector(projectStarDataItemsSelector)
+  const displayedStars = useMemo(
+    () => projectStars.toList().toArray(),
+    [projectStars]
+  )
 
   useEffect(() => {
     setPoints(generateGalaxy())
@@ -44,18 +48,15 @@ export const Galaxy = () => {
       ;(points.material as PointsMaterial).opacity = normalizedValue
     },
     'galaxy',
-    [points]
+    [points, controls]
   )
 
   return (
     <>
       <div id="scene-container" className={classes.container}></div>
-      {projectStars
-        .toList()
-        .toArray()
-        .map((star) => (
-          <ProjectStar key={star.id} star={star} />
-        ))}
+      {displayedStars.map((star) => (
+        <ProjectStar key={star.id} star={star} />
+      ))}
     </>
   )
 }
