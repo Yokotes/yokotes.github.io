@@ -12,3 +12,8 @@ export const projectStarDataCurrentItemSelector = createSelector(
   (state: AppState) => state.projectStarData,
   (projectStarData) => projectStarData.currentStar
 )
+
+export const projectStarDateIsLoadingSelector = createSelector(
+  (state: AppState) => state.projectStarData,
+  (projectStarData) => projectStarData.isLoading
+)

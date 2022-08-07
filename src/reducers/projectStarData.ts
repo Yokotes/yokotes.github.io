@@ -12,6 +12,10 @@ import { AppActions } from '../types'
 const initialState = new ProjectStarDataRecord()
 
 export const projectStarData = (state = initialState, actions: AppActions) => {
+  if (isActionOf(projectStarDataFetchAction.request, actions)) {
+    return state.setIsLoading(true)
+  }
+
   if (isActionOf(projectStarDataFetchAction.success, actions)) {
     const starsData = actions.payload.map((rawData) => ({
       name: rawData.name,
@@ -21,7 +25,7 @@ export const projectStarData = (state = initialState, actions: AppActions) => {
       isPortfolio: rawData.topics.includes('portfolio'),
     })) as ProjectStarParams[]
 
-    return state.fillItems(starsData)
+    return state.fillItems(starsData).setIsLoading(false)
   }
 
   if (isActionOf(projectStarDataAddItemAction, actions)) {

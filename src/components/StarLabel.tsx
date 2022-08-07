@@ -9,6 +9,8 @@ const useStyles = makeStyles({
     top: 0,
     left: 0,
     color: 'white',
+    // zIndex: 0,
+
     cursor: 'pointer',
     width: 'fit-content',
     fontWeight: 'bold',

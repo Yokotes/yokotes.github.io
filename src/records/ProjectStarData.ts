@@ -4,6 +4,7 @@ import { ProjectStarParams, ProjectStarRecord } from './ProjectStar'
 const defaultValue = {
   items: Map<string, ProjectStarRecord>(),
   currentStar: null as ProjectStarRecord | null,
+  isLoading: true,
 }
 
 export class ProjectStarDataRecord extends Record(defaultValue) {
@@ -46,5 +47,9 @@ export class ProjectStarDataRecord extends Record(defaultValue) {
 
   public clearCurrentStar() {
     return this.set('currentStar', null)
+  }
+
+  public setIsLoading(loading: boolean) {
+    return this.set('isLoading', loading)
   }
 }
