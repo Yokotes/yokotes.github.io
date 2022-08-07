@@ -5,6 +5,7 @@ import { Galaxy, Overlay } from './components'
 
 function App() {
   const dispatch = useDispatch()
+  console.log(process.env)
 
   useEffect(() => {
     dispatch(projectStarDataFetchAction.request())
