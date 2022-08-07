@@ -16,6 +16,8 @@
     "@types/react-dom": "^18.0.0",
     "gsap": "^3.10.4",
     "immutable": "^4.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "jwt-client": "^0.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.2",
@@ -58,6 +60,8 @@
     ]
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^8.5.8",
+    "@types/jwt-client": "^0.2.2",
     "@types/three": "^0.141.0",
     "@types/uuid": "^8.3.4",
     "gh-pages": "^4.0.0",
