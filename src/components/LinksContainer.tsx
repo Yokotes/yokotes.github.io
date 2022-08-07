@@ -21,7 +21,7 @@ export const LinksContainer = () => {
         <Grid item>
           <IconLink
             icon={<LinkedIn fontSize="large" />}
-            url="https://github.com/Yokotes"
+            url="https://www.linkedin.com/in/yokotes/"
           />
         </Grid>
         <Grid item>
