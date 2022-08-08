@@ -7,12 +7,14 @@ import {
   TextureLoader,
 } from 'three'
 
-const COUNT = 10000
+const COUNT = 7000
 
 export function generatePointsCloud(size = 0.002, radius = 10) {
   const geometry = new BufferGeometry()
   const textureLoader = new TextureLoader()
   const shape = textureLoader.load('/images/star.png')
+
+  shape.premultiplyAlpha = true
 
   const positions = new Float32Array(COUNT * 3)
   const colors = new Float32Array(COUNT * 3)

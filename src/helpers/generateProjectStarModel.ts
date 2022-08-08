@@ -31,10 +31,16 @@ export const generateProjectStarModel = () => {
   const projectStarModel = new Mesh(bgGeometry, bgMaterial)
   const lensFlare = new Lensflare()
   const lensflareTexture = textureLoader.load('/images/lensflare.png')
+  lensflareTexture.premultiplyAlpha = true
 
   lensFlare.addElement(
     new LensflareElement(lensflareTexture, 800, 0, new Color(color))
   )
+
+  projectStarModel.frustumCulled = false
+  projectStarModel.traverse((obj) => {
+    obj.frustumCulled = false
+  })
 
   projectStarModel.renderOrder = COUNT + 1
   lensFlare.renderOrder = COUNT - 1
