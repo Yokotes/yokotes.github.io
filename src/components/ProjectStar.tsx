@@ -75,6 +75,12 @@ export const ProjectStar = ({ star }: Props) => {
         model.add(lensFlare)
       }
 
+      if (distance <= 1.5) {
+        cloud.material.opacity = 1
+      } else {
+        cloud.material.opacity = 0
+      }
+
       // Move label
       if (!labelRef.current) return
 
@@ -91,7 +97,7 @@ export const ProjectStar = ({ star }: Props) => {
       labelRef.current.style.transform = `translate(-50%, -50%) translate(${x}px,${y}px)`
     },
     `${model.name}_label_update`,
-    [model, labelRef, raycaster, camera]
+    [model, labelRef, raycaster, camera, cloud]
   )
 
   return (

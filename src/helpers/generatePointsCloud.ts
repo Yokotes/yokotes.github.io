@@ -7,7 +7,7 @@ import {
   TextureLoader,
 } from 'three'
 
-const COUNT = 7000
+const COUNT = 5000
 
 export function generatePointsCloud(size = 0.002, radius = 10) {
   const geometry = new BufferGeometry()
