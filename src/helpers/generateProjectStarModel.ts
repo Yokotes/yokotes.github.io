@@ -4,12 +4,7 @@ import {
   SphereBufferGeometry,
   TextureLoader,
   MeshLambertMaterial,
-  Color,
 } from 'three'
-import {
-  Lensflare,
-  LensflareElement,
-} from 'three/examples/jsm/objects/Lensflare'
 
 const { COUNT } = PARAMETERS
 const COLORS = ['#F0DA43', '#E65A40', 'orange']
@@ -29,13 +24,6 @@ export const generateProjectStarModel = () => {
   })
 
   const projectStarModel = new Mesh(bgGeometry, bgMaterial)
-  const lensFlare = new Lensflare()
-  const lensflareTexture = textureLoader.load('/images/lensflare.png')
-  lensflareTexture.premultiplyAlpha = true
-
-  lensFlare.addElement(
-    new LensflareElement(lensflareTexture, 800, 0, new Color(color))
-  )
 
   projectStarModel.frustumCulled = false
   projectStarModel.traverse((obj) => {
@@ -43,7 +31,6 @@ export const generateProjectStarModel = () => {
   })
 
   projectStarModel.renderOrder = COUNT + 1
-  lensFlare.renderOrder = COUNT - 1
 
-  return [projectStarModel, lensFlare]
+  return projectStarModel
 }

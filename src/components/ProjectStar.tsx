@@ -24,7 +24,7 @@ interface Props {
 export const ProjectStar = ({ star }: Props) => {
   const { camera, scene, useRenderLoop, controls } = useCoreContext()
   const raycaster = useMemo(() => new Raycaster(), [])
-  const [model, lensFlare] = useMemo(() => generateProjectStarModel(), [])
+  const model = useMemo(() => generateProjectStarModel(), [])
   const cloud = useMemo(() => generatePointsCloud(), [])
 
   const labelRef = useRef<HTMLDivElement>(null)
@@ -56,7 +56,6 @@ export const ProjectStar = ({ star }: Props) => {
     camera,
     cloud,
     dispatch,
-    lensFlare,
     model,
     scene,
     star.id,
@@ -68,12 +67,6 @@ export const ProjectStar = ({ star }: Props) => {
   useRenderLoop(
     () => {
       const distance = camera.position.distanceTo(model.position)
-
-      if (distance > 0.0004 && model.children.includes(lensFlare)) {
-        model.remove(lensFlare)
-      } else if (distance <= 0.0004 && !model.children.includes(lensFlare)) {
-        model.add(lensFlare)
-      }
 
       if (distance <= 1.5) {
         cloud.material.opacity = 1
