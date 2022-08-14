@@ -12,7 +12,7 @@ const rootEpic = combineEpics(
 
 export const store = configureStore({
   reducer: rootReducer,
-  devTools: true,
+  devTools: false,
   middleware(getDefaultMiddleware) {
     return getDefaultMiddleware({ serializableCheck: false }).concat(
       epicMiddleware
