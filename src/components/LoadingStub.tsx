@@ -35,9 +35,8 @@ export const LoadingStub = ({ loading }: Props) => {
       justifyContent="center"
       alignItems="center"
       direction="column"
-      spacing={2}
     >
-      <Grid item>
+      <Grid item style={{ marginBottom: 20 }}>
         <ClockLoader color="white" />
       </Grid>
       <Grid item>
