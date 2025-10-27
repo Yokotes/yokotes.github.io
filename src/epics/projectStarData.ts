@@ -3,10 +3,7 @@ import { isActionOf } from 'typesafe-actions'
 import { filter, from, mergeMap, of } from 'rxjs'
 import { AppEpic } from '../types'
 
-console.log(
-  process.env.REACT_APP_GITHUB_TOKEN !== '' ||
-    !!process.env.REACT_APP_GITHUB_TOKEN
-)
+console.log(process.env.REACT_APP_GITHUB_TOKEN)
 
 export const projectStarDataFetchEpic: AppEpic = (action$) =>
   action$.pipe(
