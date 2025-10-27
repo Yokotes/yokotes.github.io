@@ -7,13 +7,7 @@ export const projectStarDataFetchEpic: AppEpic = (action$) =>
   action$.pipe(
     filter(isActionOf(projectStarDataFetchAction.request)),
     mergeMap(() =>
-      from(
-        fetch(process.env.REACT_APP_REPOS_URL as string, {
-          // headers: {
-          //   Authorization: `token ${process.env.REACT_APP_GITHUB_TOKEN || ''}`,
-          // },
-        })
-      ).pipe(
+      from(fetch(process.env.REACT_APP_REPOS_URL as string, {})).pipe(
         mergeMap((res) =>
           from(res.json()).pipe(
             mergeMap((data) => of(projectStarDataFetchAction.success(data)))
