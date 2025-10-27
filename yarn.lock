@@ -2032,11 +2032,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/jwt-client@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@types/jwt-client/-/jwt-client-0.2.2.tgz#270dd9c2637a57762ac6d0806f19fa6ff419548e"
-  integrity sha512-HlUi+t9+EL9IRka3ql+tvUr5A/Em1H69Jp3vSWfODmNI8X8zoHClVzll1e/k7+gDXruqqlL8FlMKPiyllZyr9w==
-
 "@types/mime@^1":
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-1.3.2.tgz#93e25bf9ee75fe0fd80b594bc4feb0e862111b5a"
@@ -6134,11 +6129,6 @@ jws@^3.2.2:
   dependencies:
     jwa "^1.4.1"
     safe-buffer "^5.0.1"
-
-jwt-client@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/jwt-client/-/jwt-client-0.2.1.tgz#203b25036cd1fe91808c40819d2d95c845d90000"
-  integrity sha512-TGNCdhPtr+GQWX1IweESBN8P/5kobiOC9Q07UntpZ90JwSeLaqtT0vgblTkxZfMa8U5vLxmpNyjRq9I6ZHzxOw==
 
 kind-of@^6.0.2:
   version "6.0.3"
