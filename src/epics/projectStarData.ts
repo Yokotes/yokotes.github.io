@@ -9,9 +9,9 @@ export const projectStarDataFetchEpic: AppEpic = (action$) =>
     mergeMap(() =>
       from(
         fetch(process.env.REACT_APP_REPOS_URL as string, {
-          headers: {
-            Authorization: `token ${process.env.REACT_APP_GITHUB_TOKEN || ''}`,
-          },
+          // headers: {
+          //   Authorization: `token ${process.env.REACT_APP_GITHUB_TOKEN || ''}`,
+          // },
         })
       ).pipe(
         mergeMap((res) =>
